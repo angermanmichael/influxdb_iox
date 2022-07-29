@@ -410,6 +410,14 @@ pub fn create_default_context() -> EngineState {
             IsAdmin,
         };
 
+        // Iox
+        bind_command! {
+            Ioxnamespace,
+            Ioxsql,
+            Ioxwrite,
+            Ioxwritefile,
+        }
+
         // Deprecated
         bind_command! {
             PivotDeprecated,
