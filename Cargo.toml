@@ -42,6 +42,7 @@ members = [
     "mutable_batch_lp",
     "mutable_batch_pb",
     "mutable_batch_tests",
+    "nu_iox",
     "object_store_metrics",
     "observability_deps",
     "packers",

@@ -22,8 +22,8 @@ miette = "5.1.0"
 nu-ansi-term = "0.46.0"
 nu-cli = { version = "0.66.2"  }
 nu-color-config = { version = "0.66.2"  }
-nu-command = { version = "0.66.3"  }
-#nu-command = { path="../nu_iox", version = "0.65.0"  }
+#nu-command = { version = "0.66.3"  }
+nu-command = { path="../nu_iox", version = "0.66.3"  }
 nu-engine = { version = "0.66.2"  }
 nu-json = { version = "0.66.2"  }
 nu-parser = { version = "0.66.2"  }
