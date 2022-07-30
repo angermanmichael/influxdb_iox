@@ -1,11 +1,11 @@
 use nom::{bytes::complete::take_until, IResult};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum NuIoxErrorType {
     TableNotFound,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct NuIoxError {
     #[allow(dead_code)]
     start: String,
@@ -79,13 +79,19 @@ pub struct NuIoxErrorHandler {
     #[allow(dead_code)]
     ctype: CommandType,
     error: String,
+    #[allow(dead_code)]
+    nu_iox_error: NuIoxError,
 }
 
 impl NuIoxErrorHandler {
     pub fn new(ctype: CommandType, error: String) -> Self {
-        let result = NuIoxError::build(error.as_ref());
-        result.print();
-        Self { ctype, error }
+        let nu_iox_error = NuIoxError::build(error.as_ref());
+        //nu_iox_error.print();
+        Self {
+            ctype,
+            error,
+            nu_iox_error,
+        }
     }
 
     // Check and see if its an error or a csv
