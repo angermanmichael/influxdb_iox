@@ -56,10 +56,10 @@ impl Command for Ioxsql {
         };
 
         let sql_result = tokio_block_sql(&dbname, &sql);
-        println!("sql_result = {:?}", sql_result);
+        //println!("sql_result = {:?}", sql_result);
 
         let numofrecords = number_of_csv_records(&sql_result.as_ref().unwrap());
-        println!("number of csv records = {:?}", numofrecords);
+        //println!("number of csv records = {:?}", numofrecords);
 
         let not_csv_data = match numofrecords.unwrap() {
             d if d > 0 => false,
@@ -67,9 +67,6 @@ impl Command for Ioxsql {
         };
 
         if not_csv_data {
-            //let result = NuIoxError::build(&sql_result.as_ref().unwrap());
-            //result.print();
-
             let nierrorhandler = NuIoxErrorHandler::new(
                 super::nuerror::CommandType::Sql,
                 sql_result.as_ref().unwrap().to_string(),

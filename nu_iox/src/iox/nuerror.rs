@@ -3,7 +3,6 @@ use nom::{bytes::complete::take_until, IResult};
 #[derive(Debug)]
 pub enum NuIoxErrorType {
     TableNotFound,
-    //SQLSHOW,
 }
 
 #[derive(Debug)]
@@ -23,12 +22,7 @@ impl NuIoxError {
         let (status0, header0) = get_header(&remainder).unwrap();
 
         let header1 = remove_colon_from_string(&header0.to_string());
-        //println!("{:?}", header1.trim());
-
-        //println!("{:?}", &status0);
-
         let message1 = remove_slash_from_string(&message0.to_string());
-        //println!("{:?}", message1.trim());
 
         Self {
             start: data.to_string(),
@@ -81,7 +75,6 @@ pub enum CommandType {
     WriteFile,
 }
 
-// #[derive(Clone, Debug)]
 pub struct NuIoxErrorHandler {
     #[allow(dead_code)]
     ctype: CommandType,
@@ -90,6 +83,8 @@ pub struct NuIoxErrorHandler {
 
 impl NuIoxErrorHandler {
     pub fn new(ctype: CommandType, error: String) -> Self {
+        let result = NuIoxError::build(error.as_ref());
+        result.print();
         Self { ctype, error }
     }
 

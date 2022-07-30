@@ -122,6 +122,6 @@ pub fn get_env_var_from_engine(
 pub fn number_of_csv_records(data: &str) -> Result<usize, Box<dyn std::error::Error>> {
     let mut rdr = ReaderBuilder::new().from_reader(data.as_bytes());
     let numofrecords = rdr.records().count();
-    println!("Number of records = {:?}", numofrecords);
+    //println!("Number of records = {:?}", numofrecords);
     Ok(numofrecords)
 }
