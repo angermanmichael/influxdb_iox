@@ -83,7 +83,8 @@ impl Command for Ioxsql {
             );
 
             nierrorhandler.nu_iox_error_check()?;
-            nierrorhandler.nu_iox_error_test_old(call)?;
+            //nierrorhandler.nu_iox_error_test_old(call)?;
+            nierrorhandler.nu_iox_error_generic(call)?;
         }
         let no_infer = false;
         let noheaders = false;

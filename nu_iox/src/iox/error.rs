@@ -27,6 +27,17 @@ impl NuIoxErrorHandler {
     }
 
     // Trigger an error to see what the Error looks like
+    pub fn nu_iox_error_generic(&self, call: &Call) -> Result<String, ShellError> {
+        return Err(ShellError::GenericError(
+            "string 01".to_string(),
+            "string 02".to_string(),
+            Some(call.head),
+            None,
+            Vec::new(),
+        ));
+    }
+
+    // Trigger an error to see what the Error looks like
     pub fn nu_iox_error_test_old(&self, call: &Call) -> Result<String, ShellError> {
         return Err(ShellError::UnsupportedInput(
             "Drop nth accepts only positive integers".to_string(),
