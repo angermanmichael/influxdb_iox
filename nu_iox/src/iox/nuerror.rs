@@ -1,4 +1,21 @@
 use nom::{bytes::complete::take_until, IResult};
+use nu_protocol::ast::Call;
+use nu_protocol::ShellError;
+
+#[derive(Copy, Clone, Debug)]
+pub enum CommandType {
+    Sql,
+    Write,
+    WriteFile,
+}
+
+pub struct NuIoxErrorHandler {
+    #[allow(dead_code)]
+    ctype: CommandType,
+    error: String,
+    #[allow(dead_code)]
+    nu_iox_error: NuIoxError,
+}
 
 #[derive(Clone, Debug)]
 pub enum NuIoxErrorType {
@@ -42,47 +59,6 @@ impl NuIoxError {
     }
 }
 
-fn remove_details(s: &str) -> IResult<&str, &str> {
-    let details: &'static str = ", details: ";
-    take_until(details)(s)
-}
-
-fn get_message(s: &str) -> IResult<&str, &str> {
-    let msg: &'static str = ", message: ";
-    take_until(msg)(s)
-}
-
-fn get_header(s: &str) -> IResult<&str, &str> {
-    let header: &'static str = "status: ";
-    take_until(header)(s)
-}
-
-fn remove_slash_from_string(s: &String) -> String {
-    s.replace(&['(', ')', ',', '\"', ';', '\''][..], "")
-}
-
-fn remove_colon_from_string(s: &String) -> String {
-    s.replace(&[':'][..], "")
-}
-
-use nu_protocol::ast::Call;
-use nu_protocol::ShellError;
-
-#[derive(Copy, Clone, Debug)]
-pub enum CommandType {
-    Sql,
-    Write,
-    WriteFile,
-}
-
-pub struct NuIoxErrorHandler {
-    #[allow(dead_code)]
-    ctype: CommandType,
-    error: String,
-    #[allow(dead_code)]
-    nu_iox_error: NuIoxError,
-}
-
 impl NuIoxErrorHandler {
     pub fn new(ctype: CommandType, error: String) -> Self {
         let nu_iox_error = NuIoxError::build(error.as_ref());
@@ -115,4 +91,27 @@ impl NuIoxErrorHandler {
             Vec::new(),
         ));
     }
+}
+
+fn remove_details(s: &str) -> IResult<&str, &str> {
+    let details: &'static str = ", details: ";
+    take_until(details)(s)
+}
+
+fn get_message(s: &str) -> IResult<&str, &str> {
+    let msg: &'static str = ", message: ";
+    take_until(msg)(s)
+}
+
+fn get_header(s: &str) -> IResult<&str, &str> {
+    let header: &'static str = "status: ";
+    take_until(header)(s)
+}
+
+fn remove_slash_from_string(s: &String) -> String {
+    s.replace(&['(', ')', ',', '\"', ';', '\''][..], "")
+}
+
+fn remove_colon_from_string(s: &String) -> String {
+    s.replace(&[':'][..], "")
 }
