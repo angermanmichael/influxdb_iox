@@ -1,9 +1,5 @@
 use super::delimited::from_delimited_data;
-
-//use super::error::error_check;
 use super::nuerror::NuIoxErrorHandler;
-//use super::error::{error_check, NuIoxErrorHandler};
-//use super::nuerror::NuIoxError;
 
 use super::util::{get_env_var_from_engine, get_runtime, number_of_csv_records};
 use nu_engine::CallExt;
@@ -64,9 +60,6 @@ impl Command for Ioxsql {
 
         let numofrecords = number_of_csv_records(&sql_result.as_ref().unwrap());
         println!("number of csv records = {:?}", numofrecords);
-
-        //let error_check_result = error_check(&sql_result.as_ref().unwrap());
-        //println!("error_check_result 1 = {:?}", error_check_result);
 
         let not_csv_data = match numofrecords.unwrap() {
             d if d > 0 => false,
