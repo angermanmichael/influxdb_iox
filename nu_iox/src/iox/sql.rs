@@ -3,7 +3,7 @@ use super::delimited::from_delimited_data;
 //use super::error::error_check;
 use super::error::NuIoxErrorHandler;
 //use super::error::{error_check, NuIoxErrorHandler};
-use super::nuerror::NuIoxError;
+//use super::nuerror::NuIoxError;
 
 use super::util::{get_env_var_from_engine, get_runtime, number_of_csv_records};
 use nu_engine::CallExt;
@@ -74,8 +74,8 @@ impl Command for Ioxsql {
         };
 
         if not_csv_data {
-            let result = NuIoxError::build(&sql_result.as_ref().unwrap());
-            result.print();
+            //let result = NuIoxError::build(&sql_result.as_ref().unwrap());
+            //result.print();
 
             let nierrorhandler = NuIoxErrorHandler::new(
                 super::error::CommandType::Sql,
@@ -83,7 +83,6 @@ impl Command for Ioxsql {
             );
 
             nierrorhandler.nu_iox_error_check()?;
-            //nierrorhandler.nu_iox_error_test_old(call)?;
             let str01 = "string 01 m".to_string();
             let str02 = "string 02 a".to_string();
             nierrorhandler.nu_iox_error_generic(&str01, &str02, call)?;

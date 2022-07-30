@@ -41,14 +41,6 @@ impl NuIoxErrorHandler {
             Vec::new(),
         ));
     }
-
-    // Trigger an error to see what the Error looks like
-    pub fn nu_iox_error_test_old(&self, call: &Call) -> Result<String, ShellError> {
-        return Err(ShellError::UnsupportedInput(
-            "Drop nth accepts only positive integers".to_string(),
-            call.head,
-        ));
-    }
 }
 
 use nom::{bytes::complete::is_a, IResult};
