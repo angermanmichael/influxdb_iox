@@ -73,9 +73,7 @@ impl Command for Ioxsql {
             );
 
             nierrorhandler.nu_iox_error_check()?;
-            let str01 = "string 01 m".to_string();
-            let str02 = "string 02 a".to_string();
-            nierrorhandler.nu_iox_error_generic(&str01, &str02, call)?;
+            nierrorhandler.nu_iox_error_generic(call)?;
         }
         let no_infer = false;
         let noheaders = false;
