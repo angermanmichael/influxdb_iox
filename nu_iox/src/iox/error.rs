@@ -27,10 +27,15 @@ impl NuIoxErrorHandler {
     }
 
     // Trigger an error to see what the Error looks like
-    pub fn nu_iox_error_generic(&self, call: &Call) -> Result<String, ShellError> {
+    pub fn nu_iox_error_generic(
+        &self,
+        str01: &str,
+        str02: &str,
+        call: &Call,
+    ) -> Result<String, ShellError> {
         return Err(ShellError::GenericError(
-            "string 01".to_string(),
-            "string 02".to_string(),
+            str01.to_string(),
+            str02.to_string(),
             Some(call.head),
             None,
             Vec::new(),

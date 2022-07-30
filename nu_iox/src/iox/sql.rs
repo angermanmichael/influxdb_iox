@@ -84,7 +84,9 @@ impl Command for Ioxsql {
 
             nierrorhandler.nu_iox_error_check()?;
             //nierrorhandler.nu_iox_error_test_old(call)?;
-            nierrorhandler.nu_iox_error_generic(call)?;
+            let str01 = "string 01 m".to_string();
+            let str02 = "string 02 a".to_string();
+            nierrorhandler.nu_iox_error_generic(&str01, &str02, call)?;
         }
         let no_infer = false;
         let noheaders = false;
