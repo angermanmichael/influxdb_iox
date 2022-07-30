@@ -1,7 +1,7 @@
 use super::delimited::from_delimited_data;
 
 //use super::error::error_check;
-use super::error::NuIoxErrorHandler;
+use super::nuerror::NuIoxErrorHandler;
 //use super::error::{error_check, NuIoxErrorHandler};
 //use super::nuerror::NuIoxError;
 
@@ -78,7 +78,7 @@ impl Command for Ioxsql {
             //result.print();
 
             let nierrorhandler = NuIoxErrorHandler::new(
-                super::error::CommandType::Sql,
+                super::nuerror::CommandType::Sql,
                 sql_result.as_ref().unwrap().to_string(),
             );
 

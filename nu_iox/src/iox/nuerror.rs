@@ -1,4 +1,4 @@
-use nom::{bytes::complete::take_until, IResult};
+use nom::{bytes::complete::is_a, bytes::complete::take_until, IResult};
 
 #[derive(Debug)]
 pub enum NuIoxErrorType {
@@ -71,14 +71,69 @@ fn remove_colon_from_string(s: &String) -> String {
     s.replace(&[':'][..], "")
 }
 
-/*
-fn main() {
-    let data: &'static str = "Error running remote query: status: InvalidArgument, message: \"Error while planning query: Error during planning: 'public.iox.h2o_xtemperature' not found\", details: [], metadata: MetadataMap { headers: {\"content-type\": \"application/grpc\", \"date\": \"Wed, 20 Jul 2022 19:08:52 GMT\", \"content-length\": \"0\"} }";
-    let result = NuIoxError::build(data);
-    println!("{:?}", result.start.trim());
-    println!("{:?}", result.error_type);
-    println!("{:?}", result.header.trim());
-    println!("{:?}", result.status.trim());
-    println!("{:?}", result.message.trim());
+use nu_protocol::ast::Call;
+use nu_protocol::ShellError;
+
+#[derive(Copy, Clone, Debug)]
+pub enum CommandType {
+    Sql,
+    Write,
+    WriteFile,
 }
-*/
+
+// #[derive(Clone, Debug)]
+pub struct NuIoxErrorHandler {
+    #[allow(dead_code)]
+    ctype: CommandType,
+    error: String,
+}
+
+impl NuIoxErrorHandler {
+    pub fn new(ctype: CommandType, error: String) -> Self {
+        Self { ctype, error }
+    }
+
+    // Check and see if its an error or a csv
+    pub fn nu_iox_error_check(&self) -> Result<String, ShellError> {
+        //println!("{:?}", self.error);
+        Ok(self.error.clone())
+    }
+
+    // Trigger an error to see what the Error looks like
+    pub fn nu_iox_error_generic(
+        &self,
+        str01: &str,
+        str02: &str,
+        call: &Call,
+    ) -> Result<String, ShellError> {
+        return Err(ShellError::GenericError(
+            str01.to_string(),
+            str02.to_string(),
+            Some(call.head),
+            None,
+            Vec::new(),
+        ));
+    }
+}
+
+//use nom::{bytes::complete::is_a, IResult};
+
+pub fn is_a_error(s: &str) -> IResult<&str, &str> {
+    let remote_query: &'static str = "Error";
+    is_a(remote_query)(s)
+}
+
+// This returns true if there is not the word Error in the string,
+// meaning that an error was thrown by nom because it can not find the Error string
+// This returns false if the string has the word Error in it
+pub fn error_check(s: &str) -> bool {
+    let result = is_a_error(s);
+    println!("error_check result 2 = {:?}", result);
+
+    let mybool = match result.is_err() {
+        true => true,
+        false => false,
+    };
+
+    return mybool;
+}

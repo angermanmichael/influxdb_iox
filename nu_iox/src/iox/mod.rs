@@ -1,5 +1,5 @@
 mod delimited;
-mod error;
+//mod error;
 mod namespace;
 mod nuclient;
 mod nuerror;
@@ -9,7 +9,7 @@ mod write;
 mod writefile;
 
 pub use delimited::*;
-pub use error::*;
+//pub use error::*;
 pub use namespace::Ioxnamespace;
 pub use nuclient::*;
 pub use nuerror::*;
