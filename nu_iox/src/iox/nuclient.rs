@@ -173,7 +173,8 @@ impl Nuclient {
         self.output_format = requested_format
             .parse()
             .context(SettingFormatSnafu { requested_format })?;
-        println!("Set output format to {}", self.output_format);
+        // leave this here for future debugging...
+        // println!("Set output format to {}", self.output_format);
         Ok(())
     }
 
