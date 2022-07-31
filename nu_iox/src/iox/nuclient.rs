@@ -158,7 +158,7 @@ impl Nuclient {
 
     pub fn use_database(&mut self, db_name: String) {
         debug!(%db_name, "setting current database");
-        println!("You are now in remote mode, querying database {}", db_name);
+        println!("You are now querying the database {}", db_name);
         self.set_query_engine(QueryEngine::Remote(db_name));
     }
 
