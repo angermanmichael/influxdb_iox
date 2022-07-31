@@ -1,6 +1,7 @@
 use nom::{bytes::complete::take_until, IResult};
 use nu_protocol::ast::Call;
 use nu_protocol::ShellError;
+use std::fmt;
 
 #[derive(Copy, Clone, Debug)]
 pub enum CommandType {
@@ -30,6 +31,13 @@ pub struct NuIoxError {
     header: String,
     status: String,
     message: String,
+}
+
+// this enables the enum TableNotFound to call to_string on itself
+impl fmt::Display for NuIoxErrorType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 impl NuIoxError {
@@ -80,7 +88,7 @@ impl NuIoxErrorHandler {
     pub fn nu_iox_error_generic(&self, call: &Call) -> Result<String, ShellError> {
         return Err(ShellError::GenericError(
             self.nu_iox_error.message.to_string(),
-            "string 02 b".to_string(),
+            self.nu_iox_error.error_type.to_string(),
             Some(call.head),
             None,
             Vec::new(),
