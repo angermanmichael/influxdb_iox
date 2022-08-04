@@ -67,12 +67,12 @@ impl Command for Ioxwrite {
         vec![
             Example {
                 description: "Write some line protocol data out to Iox using the bananas db",
-                example: r#"ioxwrite -d bananas "cpu,region=la user=955111599 222522"#,
+                example: r#"ioxwrite -d bananas "cpu,region=la user=955111599 222522""#,
                 result: None,
             },
             Example {
                 description: "Write some line protocol data out to Iox using the default db",
-                example: r#"ioxwrite "cpu,region=pa user=9599 222522"#,
+                example: r#"ioxwrite "cpu,region=pa user=9599 222522""#,
                 result: None,
             },
         ]
