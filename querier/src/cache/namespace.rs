@@ -107,6 +107,8 @@ impl NamespaceCache {
                 Some(TTL_EXISTING),
             )),
             Arc::clone(&time_provider),
+            CACHE_ID,
+            metric_registry,
         ));
 
         // add to memory pool
@@ -125,7 +127,7 @@ impl NamespaceCache {
                 },
             )),
         ));
-        let backend = SharedBackend::new(backend);
+        let backend = SharedBackend::new(backend, CACHE_ID, metric_registry);
 
         let cache = Box::new(CacheDriver::new(loader, Box::new(backend.clone())));
         let cache = Box::new(CacheWithMetrics::new(

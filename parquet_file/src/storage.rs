@@ -3,7 +3,7 @@
 
 use crate::{
     metadata::{IoxMetadata, IoxParquetMetaData},
-    serialize::{self, CodecError},
+    serialize::{self, CodecError, ROW_GROUP_WRITE_SIZE},
     ParquetFilePath,
 };
 use arrow::{
@@ -27,6 +27,13 @@ use std::{collections::HashMap, sync::Arc, time::Duration};
 use thiserror::Error;
 use tokio::io::AsyncReadExt;
 
+/// Parquet row group read size
+pub const ROW_GROUP_READ_SIZE: usize = 1024;
+
+// ensure read and write work well together
+// Skip clippy due to <https://github.com/rust-lang/rust-clippy/issues/8159>.
+#[allow(clippy::assertions_on_constants)]
+const _: () = assert!(ROW_GROUP_WRITE_SIZE % ROW_GROUP_READ_SIZE == 0);
 /// Errors returned during a Parquet "put" operation, covering [`RecordBatch`]
 /// pull from the provided stream, encoding, and finally uploading the bytes to
 /// the object store.
@@ -177,7 +184,7 @@ impl ParquetStorage {
         path: &ParquetFilePath,
     ) -> Result<SendableRecordBatchStream, ReadError> {
         let path = path.object_store_path();
-        debug!(path=?path, "fetching parquet data for filtered read");
+        trace!(path=?path, "fetching parquet data for filtered read");
 
         // Compute final (output) schema after selection
         let schema = select_schema(selection, &schema);
@@ -235,7 +242,7 @@ async fn download_and_scan_parquet(
     object_store: Arc<DynObjectStore>,
     tx: tokio::sync::mpsc::Sender<ArrowResult<RecordBatch>>,
 ) -> Result<(), ReadError> {
-    debug!(?path, "Start parquet download & scan");
+    trace!(?path, "Start parquet download & scan");
 
     let read_stream = object_store.get(&path).await?;
 
@@ -261,7 +268,6 @@ async fn download_and_scan_parquet(
     };
 
     // Size of each batch
-    let batch_size = 1024; // Todo: make a constant or policy for this
     let file_reader = SerializedFileReader::new(Bytes::from(data))?;
     let mut arrow_reader = ParquetFileArrowReader::new(Arc::new(file_reader));
 
@@ -276,7 +282,8 @@ async fn download_and_scan_parquet(
         };
 
     let mask = ProjectionMask::roots(arrow_reader.parquet_schema(), mask);
-    let record_batch_reader = arrow_reader.get_record_reader_by_columns(mask, batch_size)?;
+    let record_batch_reader =
+        arrow_reader.get_record_reader_by_columns(mask, ROW_GROUP_READ_SIZE)?;
 
     for batch in record_batch_reader {
         let batch = batch.map(|batch| {

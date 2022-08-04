@@ -67,29 +67,33 @@ impl CatalogCache {
         catalog: Arc<dyn Catalog>,
         time_provider: Arc<dyn TimeProvider>,
         metric_registry: Arc<metric::Registry>,
-        ram_pool_bytes: usize,
+        ram_pool_metadata_bytes: usize,
+        ram_pool_data_bytes: usize,
     ) -> Self {
         Self::new_internal(
             catalog,
             time_provider,
             metric_registry,
-            ram_pool_bytes,
+            ram_pool_metadata_bytes,
+            ram_pool_data_bytes,
             false,
         )
     }
 
     /// Create empty cache for testing.
+    ///
+    /// This cache will have unlimited RAM pools.
     pub fn new_testing(
         catalog: Arc<dyn Catalog>,
         time_provider: Arc<dyn TimeProvider>,
         metric_registry: Arc<metric::Registry>,
-        ram_pool_bytes: usize,
     ) -> Self {
         Self::new_internal(
             catalog,
             time_provider,
             metric_registry,
-            ram_pool_bytes,
+            usize::MAX,
+            usize::MAX,
             true,
         )
     }
@@ -98,13 +102,21 @@ impl CatalogCache {
         catalog: Arc<dyn Catalog>,
         time_provider: Arc<dyn TimeProvider>,
         metric_registry: Arc<metric::Registry>,
-        ram_pool_bytes: usize,
+        ram_pool_metadata_bytes: usize,
+        ram_pool_data_bytes: usize,
         testing: bool,
     ) -> Self {
         let backoff_config = BackoffConfig::default();
-        let ram_pool = Arc::new(ResourcePool::new(
-            "ram",
-            RamSize(ram_pool_bytes),
+
+        let ram_pool_metadata = Arc::new(ResourcePool::new(
+            "ram_metadata",
+            RamSize(ram_pool_metadata_bytes),
+            Arc::clone(&time_provider),
+            Arc::clone(&metric_registry),
+        ));
+        let ram_pool_data = Arc::new(ResourcePool::new(
+            "ram_data",
+            RamSize(ram_pool_data_bytes),
             Arc::clone(&time_provider),
             Arc::clone(&metric_registry),
         ));
@@ -114,7 +126,7 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let table_cache = TableCache::new(
@@ -122,7 +134,7 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let namespace_cache = NamespaceCache::new(
@@ -130,7 +142,7 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let processed_tombstones_cache = ProcessedTombstonesCache::new(
@@ -138,7 +150,7 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let parquet_file_cache = ParquetFileCache::new(
@@ -146,7 +158,7 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let tombstone_cache = TombstoneCache::new(
@@ -154,20 +166,20 @@ impl CatalogCache {
             backoff_config.clone(),
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
         let read_buffer_cache = ReadBufferCache::new(
             backoff_config,
             Arc::clone(&time_provider),
             Arc::clone(&metric_registry),
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_data),
             testing,
         );
         let projected_schema_cache = ProjectedSchemaCache::new(
             Arc::clone(&time_provider),
             &metric_registry,
-            Arc::clone(&ram_pool),
+            Arc::clone(&ram_pool_metadata),
             testing,
         );
 

@@ -1,18 +1,10 @@
 use data_types::IngesterMapping;
 use serde::Deserialize;
 use snafu::{ResultExt, Snafu};
-use std::{
-    collections::{BTreeSet, HashMap},
-    fs, io,
-    path::PathBuf,
-    sync::Arc,
-};
+use std::{collections::HashMap, fs, io, path::PathBuf, sync::Arc};
 
 #[derive(Debug, Snafu)]
 pub enum Error {
-    #[snafu(display("ingester address '{}' was repeated", ingester_address))]
-    RepeatedAddress { ingester_address: String },
-
     #[snafu(display("Could not read sequencer to ingester file `{}`: {source}", file.display()))]
     SequencerToIngesterFileReading { source: io::Error, file: PathBuf },
 
@@ -51,28 +43,6 @@ pub struct QuerierConfig {
         action
     )]
     pub num_query_threads: Option<usize>,
-
-    /// gRPC address for the querier to talk with the ingester. For
-    /// example:
-    ///
-    /// "http://127.0.0.1:8083"
-    ///
-    /// or
-    ///
-    /// "http://10.10.10.1:8083,http://10.10.10.2:8083"
-    ///
-    /// for multiple addresses.
-    ///
-    /// Note we plan to improve this interface in
-    /// <https://github.com/influxdata/influxdb_iox/issues/3996>
-    #[clap(
-        long = "--ingester-address",
-        env = "INFLUXDB_IOX_INGESTER_ADDRESSES",
-        multiple_values = true,
-        use_value_delimiter = true,
-        action
-    )]
-    pub ingester_addresses: Vec<String>,
 
     /// Path to a JSON file containing a Sequencer ID to ingesters gRPC mapping. For example:
     ///
@@ -212,14 +182,23 @@ pub struct QuerierConfig {
     )]
     pub sequencer_to_ingesters: Option<String>,
 
-    /// Size of the RAM cache pool in bytes.
+    /// Size of the RAM cache used to store catalog metadata information in bytes.
     #[clap(
-        long = "--ram-pool-bytes",
-        env = "INFLUXDB_IOX_RAM_POOL_BYTES",
-        default_value = "1073741824",
+        long = "--ram-pool-metadata-bytes",
+        env = "INFLUXDB_IOX_RAM_POOL_METADATA_BYTES",
+        default_value = "134217728",  // 128MB
         action
     )]
-    pub ram_pool_bytes: usize,
+    pub ram_pool_metadata_bytes: usize,
+
+    /// Size of the RAM cache used to store data in bytes.
+    #[clap(
+        long = "--ram-pool-data-bytes",
+        env = "INFLUXDB_IOX_RAM_POOL_DATA_BYTES",
+        default_value = "1073741824",  // 1GB
+        action
+    )]
+    pub ram_pool_data_bytes: usize,
 
     /// Limit the number of concurrent queries.
     #[clap(
@@ -274,26 +253,18 @@ impl QuerierConfig {
                 Ok(IngesterAddresses::BySequencer(map))
             }
         } else {
-            let mut current_addresses = BTreeSet::new();
-            Ok(IngesterAddresses::List(
-                self.ingester_addresses
-                    .iter()
-                    .map(|ingester_address| {
-                        if current_addresses.contains(ingester_address) {
-                            RepeatedAddressSnafu { ingester_address }.fail()
-                        } else {
-                            current_addresses.insert(ingester_address);
-                            Ok(ingester_address.clone())
-                        }
-                    })
-                    .collect::<Result<Vec<_>, _>>()?,
-            ))
+            Ok(IngesterAddresses::None)
         }
     }
 
-    /// Size of the RAM cache pool in bytes.
-    pub fn ram_pool_bytes(&self) -> usize {
-        self.ram_pool_bytes
+    /// Size of the RAM cache pool for metadata in bytes.
+    pub fn ram_pool_metadata_bytes(&self) -> usize {
+        self.ram_pool_metadata_bytes
+    }
+
+    /// Size of the RAM cache pool for payload in bytes.
+    pub fn ram_pool_data_bytes(&self) -> usize {
+        self.ram_pool_data_bytes
     }
 
     /// Number of queries allowed to run concurrently
@@ -380,12 +351,10 @@ fn deserialize_sequencer_ingester_map(
 
 /// Specify one of:
 ///
-/// - A list of ingester addresses (TODO: Remove this when `--ingester-address` is removed)
 /// - A mapping from sequencer ID to ingesters
 /// - No connections, meaning only persisted data should be used
 #[derive(Debug, PartialEq)]
 pub enum IngesterAddresses {
-    List(Vec<String>),
     BySequencer(HashMap<i32, IngesterMapping>),
     None,
 }
@@ -428,7 +397,7 @@ mod tests {
         assert_eq!(actual.num_query_threads(), None);
         assert!(matches!(
             actual.ingester_addresses().unwrap(),
-            IngesterAddresses::List(list) if list.is_empty(),
+            IngesterAddresses::None,
         ));
     }
 
@@ -440,59 +409,8 @@ mod tests {
         assert_eq!(actual.num_query_threads(), Some(42));
         assert!(matches!(
             actual.ingester_addresses().unwrap(),
-            IngesterAddresses::List(list) if list.is_empty(),
+            IngesterAddresses::None,
         ));
-    }
-
-    #[test]
-    fn test_one_ingester_address() {
-        let actual = QuerierConfig::try_parse_from([
-            "my_binary",
-            "--ingester-address",
-            "http://127.0.0.1:9090",
-        ])
-        .unwrap();
-
-        assert_eq!(actual.num_query_threads(), None);
-        assert!(matches!(
-            actual.ingester_addresses().unwrap(),
-            IngesterAddresses::List(list) if list == ["http://127.0.0.1:9090".to_string()],
-        ));
-    }
-
-    #[test]
-    fn test_multiple_ingester_addresses() {
-        let actual = QuerierConfig::try_parse_from([
-            "my_binary",
-            "--ingester-address",
-            "http://127.0.0.1:9090,http://10.10.2.11:8080",
-        ])
-        .unwrap();
-
-        assert_eq!(actual.num_query_threads(), None);
-        assert!(matches!(
-            actual.ingester_addresses().unwrap(),
-            IngesterAddresses::List(list) if list == [
-                "http://127.0.0.1:9090".to_string(),
-                "http://10.10.2.11:8080".to_string()
-            ],
-        ));
-    }
-
-    #[test]
-    fn test_multiple_ingester_addresses_repeated() {
-        let actual = QuerierConfig::try_parse_from([
-            "my_binary",
-            "--ingester-address",
-            "http://127.0.0.1:9090,http://10.10.2.11:8080,http://127.0.0.1:9090",
-        ])
-        .unwrap();
-
-        assert_eq!(actual.num_query_threads(), None);
-        assert_eq!(
-            actual.ingester_addresses().unwrap_err().to_string(),
-            "ingester address 'http://127.0.0.1:9090' was repeated"
-        );
     }
 
     #[test]

@@ -40,6 +40,9 @@ use std::{
     ops::Deref,
 };
 
+#[cfg(feature = "ffi")]
+pub mod ffi;
+
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display(r#"Must not contain duplicate tags, but "{}" was repeated"#, tag_key))]
@@ -702,13 +705,13 @@ fn field_float_value_with_exponential_and_decimal(i: &str) -> IResult<&str, &str
 }
 
 fn field_float_value_with_exponential_no_decimal(i: &str) -> IResult<&str, &str> {
-    exponential_value(i)
+    recognize(preceded(opt(tag("-")), exponential_value))(i)
 }
 
 fn exponential_value(i: &str) -> IResult<&str, &str> {
     recognize(separated_pair(
         digit1,
-        tuple((alt((tag("e"), tag("E"))), alt((tag("-"), tag("+"))))),
+        tuple((alt((tag("e"), tag("E"))), opt(alt((tag("-"), tag("+")))))),
         digit1,
     ))(i)
 }
@@ -1485,41 +1488,39 @@ mod test {
         let vals = parse(input).unwrap();
         assert_eq!(vals.len(), 1);
 
-        /////////////////////
-        // Negative tests
+        let input = "m0 field=1e-0";
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_eq!(vals[0].field_value("field"), Some(&FieldValue::F64(1.0)));
 
-        // NO "+" sign
+        let input = "m0 field=-1e-0";
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_eq!(vals[0].field_value("field"), Some(&FieldValue::F64(-1.0)));
+
+        // NO "+" sign is accepted by IDPE
         let input = "m0 field=-1.234456e06 1615869152385000000";
-        let parsed = parse(input);
-        assert!(
-            matches!(parsed, Err(super::Error::CannotParseEntireLine { .. })),
-            "Wrong error: {:?}",
-            parsed,
-        );
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_float_field(&vals[0], "field", -1.234456e06);
 
         let input = "m0 field=1.234456e06 1615869152385000000";
-        let parsed = parse(input);
-        assert!(
-            matches!(parsed, Err(super::Error::CannotParseEntireLine { .. })),
-            "Wrong error: {:?}",
-            parsed,
-        );
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_float_field(&vals[0], "field", 1.234456e06);
 
         let input = "m0 field=-1.234456E06 1615869152385000000";
-        let parsed = parse(input);
-        assert!(
-            matches!(parsed, Err(super::Error::CannotParseEntireLine { .. })),
-            "Wrong error: {:?}",
-            parsed,
-        );
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_float_field(&vals[0], "field", -1.234456e06);
 
         let input = "m0 field=1.234456E06 1615869152385000000";
-        let parsed = parse(input);
-        assert!(
-            matches!(parsed, Err(super::Error::CannotParseEntireLine { .. })),
-            "Wrong error: {:?}",
-            parsed,
-        );
+        let vals = parse(input).unwrap();
+        assert_eq!(vals.len(), 1);
+        assert_float_field(&vals[0], "field", 1.234456e06);
+
+        /////////////////////
+        // Negative tests
 
         // No digits after e
         let input = "m0 field=-1.234456e 1615869152385000000";
@@ -2258,5 +2259,24 @@ her"#,
                 .is_same_type(&FieldValue::U64(42))
         );
         assert!(!FieldValue::Boolean(true).is_same_type(&FieldValue::U64(42)));
+    }
+
+    /// Assert that the field named `field_name` has a float value
+    /// within 0.0001% of `expected_value`, panic'ing if not
+    fn assert_float_field(parsed_line: &ParsedLine<'_>, field_name: &str, expected_value: f64) {
+        let field_value = parsed_line
+            .field_value(field_name)
+            .expect("did not contain field name");
+
+        let actual_value = if let FieldValue::F64(v) = field_value {
+            *v
+        } else {
+            panic!(
+                "field {} had value {:?}, expected F64",
+                field_name, field_value
+            );
+        };
+
+        assert!(approximately_equal(expected_value, actual_value));
     }
 }
