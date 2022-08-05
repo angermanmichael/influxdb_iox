@@ -762,15 +762,16 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chrono"
-version = "0.4.19"
+version = "0.4.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "670ad68c9088c2a963aaa298cb369688cf3f9465ce5e2d4ca10e6e0098a1ce73"
+checksum = "6127248204b9aba09a362f6c930ef6a78f2c1b2215f8a7b398c06e1083f17af0"
 dependencies = [
- "libc",
+ "js-sys",
  "num-integer",
  "num-traits",
  "serde",
  "time 0.1.44",
+ "wasm-bindgen",
  "winapi 0.3.9",
 ]
 
@@ -5990,8 +5991,8 @@ dependencies = [
 
 [[package]]
 name = "rskafka"
-version = "0.2.0"
-source = "git+https://github.com/influxdata/rskafka.git?rev=bb5c9c753b9595ea85dad65d9488859ae89c8456#bb5c9c753b9595ea85dad65d9488859ae89c8456"
+version = "0.3.0"
+source = "git+https://github.com/influxdata/rskafka.git?rev=e34f6f485db9256a7614220cabea86f7c44f5eb6#e34f6f485db9256a7614220cabea86f7c44f5eb6"
 dependencies = [
  "async-socks5",
  "async-trait",
@@ -6181,9 +6182,9 @@ dependencies = [
 
 [[package]]
 name = "rust_decimal"
-version = "1.25.0"
+version = "1.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34a3bb58e85333f1ab191bf979104b586ebd77475bc6681882825f4532dfe87c"
+checksum = "8fc129ab6000ab4037e7718703cdeab82a12c4ee23a238658f55372d80ef2b05"
 dependencies = [
  "arrayvec 0.7.2",
  "num-traits",

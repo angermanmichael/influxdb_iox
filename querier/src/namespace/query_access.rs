@@ -205,6 +205,7 @@ mod tests {
     use datafusion::common::DataFusionError;
     use iox_query::frontend::sql::SqlQueryPlanner;
     use iox_tests::util::{TestCatalog, TestParquetFileBuilder};
+    use metric::{Observation, RawReporter};
     use snafu::{ResultExt, Snafu};
     use trace::{span::SpanStatus, RingBufferTraceCollector};
 
@@ -351,13 +352,100 @@ mod tests {
         )
         .await;
 
+        // check span
         let span = traces
             .spans()
             .into_iter()
             .find(|s| s.name == "querier table chunks")
             .expect("tracing span not found");
-
         assert_eq!(span.status, SpanStatus::Ok);
+
+        // check metrics
+        let mut reporter = RawReporter::default();
+        catalog.metric_registry().report(&mut reporter);
+        assert_eq!(
+            reporter
+                .metric("query_pruner_chunks")
+                .unwrap()
+                .observation(&[("result", "pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_rows")
+                .unwrap()
+                .observation(&[("result", "pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_bytes")
+                .unwrap()
+                .observation(&[("result", "pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_chunks")
+                .unwrap()
+                .observation(&[("result", "not_pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_rows")
+                .unwrap()
+                .observation(&[("result", "not_pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_bytes")
+                .unwrap()
+                .observation(&[("result", "not_pruned")])
+                .unwrap(),
+            &Observation::U64Counter(0),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_chunks")
+                .unwrap()
+                .observation(&[
+                    ("result", "could_not_prune"),
+                    ("reason", "No expression on predicate")
+                ])
+                .unwrap(),
+            &Observation::U64Counter(4),
+        );
+        assert_eq!(
+            reporter
+                .metric("query_pruner_rows")
+                .unwrap()
+                .observation(&[
+                    ("result", "could_not_prune"),
+                    ("reason", "No expression on predicate")
+                ])
+                .unwrap(),
+            &Observation::U64Counter(4),
+        );
+        if let Observation::U64Counter(bytes) = reporter
+            .metric("query_pruner_bytes")
+            .unwrap()
+            .observation(&[
+                ("result", "could_not_prune"),
+                ("reason", "No expression on predicate"),
+            ])
+            .unwrap()
+        {
+            assert!(*bytes > 6000, "bytes ({bytes}) must be > 6000");
+        } else {
+            panic!("Wrong metrics type");
+        }
 
         assert_query(
             &querier_namespace,
@@ -413,10 +501,10 @@ mod tests {
                 "|               |   CoalescePartitionsExec                                                                           |",
                 "|               |     ProjectionExec: expr=[host@0 as host, perc@1 as perc, time@2 as time]                          |",
                 "|               |       UnionExec                                                                                    |",
-                "|               |         CoalesceBatchesExec: target_batch_size=500                                                 |",
+                "|               |         CoalesceBatchesExec: target_batch_size=4096                                                |",
                 "|               |           FilterExec: time@2 < 1 OR time@2 > 13 OR NOT host@0 = CAST(d AS Dictionary(Int32, Utf8)) |",
                 "|               |             IOxReadFilterNode: table_name=mem, chunks=1 predicate=Predicate                        |",
-                "|               |         CoalesceBatchesExec: target_batch_size=500                                                 |",
+                "|               |         CoalesceBatchesExec: target_batch_size=4096                                                |",
                 "|               |           FilterExec: time@2 < 1 OR time@2 > 13 OR NOT host@0 = CAST(d AS Dictionary(Int32, Utf8)) |",
                 "|               |             IOxReadFilterNode: table_name=mem, chunks=1 predicate=Predicate                        |",
                 "|               |                                                                                                    |",

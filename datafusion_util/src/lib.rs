@@ -23,7 +23,7 @@ use datafusion::{
         error::Result as ArrowResult,
         record_batch::RecordBatch,
     },
-    logical_plan::{col, lit, Expr},
+    logical_plan::{col, lit, Expr, Operator},
     physical_plan::{RecordBatchStream, SendableRecordBatchStream},
     scalar::ScalarValue,
 };
@@ -31,6 +31,32 @@ use futures::{Stream, StreamExt};
 use tokio::sync::mpsc::{Receiver, UnboundedReceiver};
 use tokio_stream::wrappers::{ReceiverStream, UnboundedReceiverStream};
 use watch::WatchedTask;
+
+/// Split an Expr up into its constituent parts
+///
+/// ```text
+/// A ==> Vec[A]
+/// A AND B AND C ==> Vec[A, B, C]
+/// ```
+pub fn disassemble_conjuct(expr: Expr) -> Vec<Expr> {
+    let mut exprs = vec![];
+    disassemble_conjuct_impl(expr, &mut exprs);
+    exprs
+}
+
+fn disassemble_conjuct_impl(expr: Expr, exprs: &mut Vec<Expr>) {
+    match expr {
+        Expr::BinaryExpr {
+            right,
+            op: Operator::And,
+            left,
+        } => {
+            disassemble_conjuct_impl(*left, exprs);
+            disassemble_conjuct_impl(*right, exprs);
+        }
+        other => exprs.push(other),
+    }
+}
 
 /// Traits to help creating DataFusion [`Expr`]s
 pub trait AsExpr {
@@ -77,51 +103,6 @@ pub fn make_range_expr(start: i64, end: i64, time: impl AsRef<str>) -> Expr {
     let ts_high = col(time.as_ref()).lt(lit(ts_end));
 
     ts_low.and(ts_high)
-}
-
-/// Creates a single expression representing the conjunction (aka
-/// AND'ing) together of a set of expressions
-#[derive(Debug, Default)]
-pub struct AndExprBuilder {
-    cur_expr: Option<Expr>,
-}
-
-impl AndExprBuilder {
-    /// append `new_expr` to the expression chain being built
-    pub fn append_opt_ref(self, new_expr: Option<&Expr>) -> Self {
-        match new_expr {
-            None => self,
-            Some(new_expr) => self.append_expr(new_expr.clone()),
-        }
-    }
-
-    /// append `new_expr` to the expression chain being built
-    pub fn append_opt(self, new_expr: Option<Expr>) -> Self {
-        match new_expr {
-            None => self,
-            Some(new_expr) => self.append_expr(new_expr),
-        }
-    }
-
-    /// Append `new_expr` to the expression chain being built
-    pub fn append_expr(self, new_expr: Expr) -> Self {
-        let Self { cur_expr } = self;
-
-        let cur_expr = if let Some(cur_expr) = cur_expr {
-            cur_expr.and(new_expr)
-        } else {
-            new_expr
-        };
-
-        let cur_expr = Some(cur_expr);
-
-        Self { cur_expr }
-    }
-
-    /// Creates the new filter expression, consuming Self
-    pub fn build(self) -> Option<Expr> {
-        self.cur_expr
-    }
 }
 
 /// A RecordBatchStream created from in-memory RecordBatches.
