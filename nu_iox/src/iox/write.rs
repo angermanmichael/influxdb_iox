@@ -75,6 +75,16 @@ impl Command for Ioxwrite {
                 example: r#"ioxwrite "cpu,region=pa user=9599 222522""#,
                 result: None,
             },
+            Example {
+                description: "Write some line protocol data out to Iox using the default db",
+                example: r#"ioxwrite "pop_nm,location=corvallis,state=OR population=51023,zipcode=97333 1700756160""#,
+                result: None,
+            },
+            Example {
+                description: "Write some line protocol data out to Iox using the default db",
+                example: r#"ioxwrite "cpu,region=pa user=9599 222522""#,
+                result: None,
+            },
         ]
     }
 }
