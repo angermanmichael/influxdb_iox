@@ -14,8 +14,10 @@ use ioxd_router::create_router_server_type;
 use object_store::DynObjectStore;
 use object_store_metrics::ObjectStoreMetrics;
 use observability_deps::tracing::*;
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 use thiserror::Error;
+
+const QUERY_POOL_NAME: &str = "iox-shared";
 
 #[derive(Debug, Error)]
 pub enum Error {
@@ -59,9 +61,6 @@ pub struct Config {
     #[clap(flatten)]
     pub(crate) catalog_dsn: CatalogDsnConfig,
 
-    #[clap(flatten)]
-    pub(crate) write_buffer_config: WriteBufferConfig,
-
     /// Query pool name to dispatch writes to.
     #[clap(
         long = "--query-pool",
@@ -87,12 +86,20 @@ pub struct Config {
         action
     )]
     pub(crate) http_request_limit: usize,
+
+    /// The location InfluxDB IOx will use to store files locally. If not specified, will run in
+    /// ephemeral mode.
+    #[clap(long = "--data-dir-router", env = "INFLUXDB_IOX_DB_DIR", action)]
+    pub database_directory_router: Option<PathBuf>,
 }
 
 pub async fn command(config: Config) -> Result<()> {
     let common_state = CommonServerState::from_config(config.run_config.clone())?;
     let time_provider = Arc::new(SystemProvider::new()) as Arc<dyn TimeProvider>;
     let metrics = Arc::new(metric::Registry::default());
+
+    let write_buffer_config =
+        WriteBufferConfig::new(QUERY_POOL_NAME, config.database_directory_router);
 
     let catalog = config
         .catalog_dsn
@@ -108,14 +115,15 @@ pub async fn command(config: Config) -> Result<()> {
         &*metrics,
     ));
 
+    info!("starting router");
     let server_type = create_router_server_type(
         &common_state,
         Arc::clone(&metrics),
         catalog,
         object_store,
-        &config.write_buffer_config,
-        &config.query_pool_name,
-        config.http_request_limit,
+        &write_buffer_config,
+        QUERY_POOL_NAME,
+        1_000,
     )
     .await?;
 
