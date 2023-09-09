@@ -1,5 +1,5 @@
 use csv::{ReaderBuilder, Trim};
-use nu_protocol::{Config, IntoPipelineData, PipelineData, ShellError, Span, Value};
+use nu_protocol::{Config, PipelineData, ShellError, Span, Value};
 
 fn from_delimited_string_to_value(
     s: String,
