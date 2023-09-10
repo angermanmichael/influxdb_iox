@@ -19,17 +19,6 @@ checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
 
 [[package]]
 name = "ahash"
-version = "0.7.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fcb51a0695d8f838b1ee009b3fbf66bda078cd64590202a864a8f3e8c4315c47"
-dependencies = [
- "getrandom",
- "once_cell",
- "version_check",
-]
-
-[[package]]
-name = "ahash"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c99f64d1e06488f620f932677e24bc6e2897582980441ae90a671415bd7ec2f"
@@ -197,37 +186,10 @@ checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
 
 [[package]]
 name = "arrow"
-version = "19.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89b7e88e4739c3616cae75adce6660c9c1a80f2660545eb77afbe0e4a0f048a0"
-dependencies = [
- "ahash 0.7.6",
- "bitflags 1.3.2",
- "chrono",
- "comfy-table 6.2.0",
- "csv",
- "flatbuffers 2.1.2",
- "half 2.3.1",
- "hashbrown 0.12.3",
- "hex",
- "indexmap 1.9.3",
- "lazy_static",
- "lexical-core",
- "multiversion",
- "num 0.4.1",
- "rand",
- "regex",
- "serde",
- "serde_derive",
- "serde_json",
-]
-
-[[package]]
-name = "arrow"
 version = "46.0.0"
 source = "git+https://github.com/alamb/arrow-rs.git?rev=1d0093c172ea1501c9fc9f38be1791f47ac372e4#1d0093c172ea1501c9fc9f38be1791f47ac372e4"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "arrow-arith",
  "arrow-array",
  "arrow-buffer",
@@ -262,7 +224,7 @@ name = "arrow-array"
 version = "46.0.0"
 source = "git+https://github.com/alamb/arrow-rs.git?rev=1d0093c172ea1501c9fc9f38be1791f47ac372e4#1d0093c172ea1501c9fc9f38be1791f47ac372e4"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "arrow-buffer",
  "arrow-data",
  "arrow-schema",
@@ -294,7 +256,7 @@ dependencies = [
  "arrow-schema",
  "arrow-select",
  "chrono",
- "comfy-table 7.0.1",
+ "comfy-table",
  "half 2.3.1",
  "lexical-core",
  "num 0.4.1",
@@ -331,24 +293,6 @@ dependencies = [
 
 [[package]]
 name = "arrow-flight"
-version = "19.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18eadbc2d726572e874ccef2bdd0115bc29ef237d3c7b9b7f4415fda3e198974"
-dependencies = [
- "arrow 19.0.0",
- "base64 0.13.1",
- "bytes",
- "futures",
- "proc-macro2",
- "prost 0.10.4",
- "prost-derive 0.10.1",
- "tokio",
- "tonic 0.7.2",
- "tonic-build 0.7.2",
-]
-
-[[package]]
-name = "arrow-flight"
 version = "46.0.0"
 source = "git+https://github.com/alamb/arrow-rs.git?rev=1d0093c172ea1501c9fc9f38be1791f47ac372e4#1d0093c172ea1501c9fc9f38be1791f47ac372e4"
 dependencies = [
@@ -368,9 +312,9 @@ dependencies = [
  "futures",
  "once_cell",
  "paste",
- "prost 0.11.9",
+ "prost",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
 ]
 
 [[package]]
@@ -383,7 +327,7 @@ dependencies = [
  "arrow-cast",
  "arrow-data",
  "arrow-schema",
- "flatbuffers 23.5.26",
+ "flatbuffers",
 ]
 
 [[package]]
@@ -424,7 +368,7 @@ name = "arrow-row"
 version = "46.0.0"
 source = "git+https://github.com/alamb/arrow-rs.git?rev=1d0093c172ea1501c9fc9f38be1791f47ac372e4#1d0093c172ea1501c9fc9f38be1791f47ac372e4"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "arrow-array",
  "arrow-buffer",
  "arrow-data",
@@ -469,10 +413,10 @@ dependencies = [
 name = "arrow_util"
 version = "0.1.0"
 dependencies = [
- "ahash 0.8.3",
- "arrow 46.0.0",
+ "ahash",
+ "arrow",
  "chrono",
- "comfy-table 7.0.1",
+ "comfy-table",
  "datafusion",
  "hashbrown 0.14.0",
  "num-traits",
@@ -603,7 +547,7 @@ dependencies = [
  "snafu",
  "test_helpers_end_to_end",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -615,41 +559,12 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "axum"
-version = "0.5.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acee9fd5073ab6b045a275b3e709c163dd36c90685219cb21804a147b58dba43"
-dependencies = [
- "async-trait",
- "axum-core 0.2.9",
- "bitflags 1.3.2",
- "bytes",
- "futures-util",
- "http",
- "http-body",
- "hyper",
- "itoa",
- "matchit 0.5.0",
- "memchr",
- "mime",
- "percent-encoding",
- "pin-project-lite",
- "serde",
- "sync_wrapper",
- "tokio",
- "tower",
- "tower-http 0.3.5",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
-name = "axum"
 version = "0.6.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b829e4e32b91e643de6eafe82b1d90675f5874230191a4ffbc1b336dec4d6bf"
 dependencies = [
  "async-trait",
- "axum-core 0.3.4",
+ "axum-core",
  "bitflags 1.3.2",
  "bytes",
  "futures-util",
@@ -657,7 +572,7 @@ dependencies = [
  "http-body",
  "hyper",
  "itoa",
- "matchit 0.7.2",
+ "matchit",
  "memchr",
  "mime",
  "percent-encoding",
@@ -666,22 +581,6 @@ dependencies = [
  "serde",
  "sync_wrapper",
  "tower",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
-name = "axum-core"
-version = "0.2.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37e5939e02c56fecd5c017c37df4238c0a839fa76b7f97acdd7efb804fd181cc"
-dependencies = [
- "async-trait",
- "bytes",
- "futures-util",
- "http",
- "http-body",
- "mime",
  "tower-layer",
  "tower-service",
 ]
@@ -1194,7 +1093,7 @@ dependencies = [
  "reqwest",
  "thiserror",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "tower",
  "workspace-hack",
 ]
@@ -1211,15 +1110,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmake"
-version = "0.1.50"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a31c789563b815f77f4250caee12365734369f942439b7defd71e18a48197130"
-dependencies = [
- "cc",
-]
-
-[[package]]
 name = "codepage"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1233,17 +1123,6 @@ name = "colorchoice"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
-
-[[package]]
-name = "comfy-table"
-version = "6.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e959d788268e3bf9d35ace83e81b124190378e4c91c9067524675e33394b8ba"
-dependencies = [
- "strum 0.24.1",
- "strum_macros 0.24.3",
- "unicode-width",
-]
 
 [[package]]
 name = "comfy-table"
@@ -1376,9 +1255,9 @@ version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2895653b4d9f1538a83970077cb01dfc77a4810524e51a110944688e916b18e"
 dependencies = [
- "prost 0.11.9",
- "prost-types 0.11.9",
- "tonic 0.9.2",
+ "prost",
+ "prost-types",
+ "tonic",
  "tracing-core",
 ]
 
@@ -1395,13 +1274,13 @@ dependencies = [
  "hdrhistogram",
  "humantime",
  "parking_lot",
- "prost-types 0.11.9",
+ "prost-types",
  "serde",
  "serde_json",
  "thread_local",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
@@ -1734,8 +1613,8 @@ name = "datafusion"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "ahash 0.8.3",
- "arrow 46.0.0",
+ "ahash",
+ "arrow",
  "arrow-array",
  "arrow-schema",
  "async-compression",
@@ -1780,7 +1659,7 @@ name = "datafusion-common"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "arrow-array",
  "async-compression",
  "bytes",
@@ -1803,7 +1682,7 @@ name = "datafusion-execution"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "dashmap",
  "datafusion-common",
  "datafusion-expr",
@@ -1822,8 +1701,8 @@ name = "datafusion-expr"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "ahash 0.8.3",
- "arrow 46.0.0",
+ "ahash",
+ "arrow",
  "datafusion-common",
  "sqlparser 0.37.0",
  "strum 0.25.0",
@@ -1835,7 +1714,7 @@ name = "datafusion-optimizer"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "async-trait",
  "chrono",
  "datafusion-common",
@@ -1852,8 +1731,8 @@ name = "datafusion-physical-expr"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "ahash 0.8.3",
- "arrow 46.0.0",
+ "ahash",
+ "arrow",
  "arrow-array",
  "arrow-buffer",
  "arrow-schema",
@@ -1885,13 +1764,13 @@ name = "datafusion-proto"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "chrono",
  "datafusion",
  "datafusion-common",
  "datafusion-expr",
  "object_store",
- "prost 0.11.9",
+ "prost",
 ]
 
 [[package]]
@@ -1899,7 +1778,7 @@ name = "datafusion-sql"
 version = "30.0.0"
 source = "git+https://github.com/apache/arrow-datafusion.git?rev=3ea870cf0995a86b5297a92be5d5432577aefabe#3ea870cf0995a86b5297a92be5d5432577aefabe"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "arrow-schema",
  "datafusion-common",
  "datafusion-expr",
@@ -2248,17 +2127,6 @@ checksum = "0ce7134b9999ecaf8bcd65542e436736ef32ddca1b3e06094cb6ec5755203b80"
 
 [[package]]
 name = "flatbuffers"
-version = "2.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86b428b715fdbdd1c364b84573b5fdc0f84f8e423661b9f398735278bc7f2b6a"
-dependencies = [
- "bitflags 1.3.2",
- "smallvec",
- "thiserror",
-]
-
-[[package]]
-name = "flatbuffers"
 version = "23.5.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4dac53e22462d78c16d64a1cd22371b54cc3fe94aa15e7886a2fa6e5d1ab8640"
@@ -2281,15 +2149,15 @@ dependencies = [
 name = "flightsql"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "bytes",
  "datafusion",
  "iox_query",
  "observability_deps",
  "once_cell",
- "prost 0.11.9",
+ "prost",
  "snafu",
  "workspace-hack",
 ]
@@ -2508,11 +2376,11 @@ dependencies = [
  "pbjson",
  "pbjson-build",
  "pbjson-types",
- "prost 0.11.9",
- "prost-build 0.11.9",
+ "prost",
+ "prost-build",
  "serde",
- "tonic 0.9.2",
- "tonic-build 0.9.2",
+ "tonic",
+ "tonic-build",
  "workspace-hack",
 ]
 
@@ -2557,8 +2425,8 @@ dependencies = [
  "futures",
  "hashbrown 0.14.0",
  "metric",
- "prost 0.11.9",
- "prost-build 0.11.9",
+ "prost",
+ "prost-build",
  "rand",
  "test_helpers",
  "thiserror",
@@ -2631,12 +2499,12 @@ dependencies = [
  "http-body",
  "hyper",
  "pin-project",
- "prost 0.11.9",
- "prost-build 0.11.9",
+ "prost",
+ "prost-build",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
- "tonic-build 0.9.2",
+ "tonic",
+ "tonic-build",
  "tower",
  "workspace-hack",
 ]
@@ -2645,11 +2513,11 @@ dependencies = [
 name = "grpc-binary-logger-proto"
 version = "0.1.0"
 dependencies = [
- "prost 0.11.9",
- "prost-build 0.11.9",
- "prost-types 0.11.9",
- "tonic 0.9.2",
- "tonic-build 0.9.2",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "tonic",
+ "tonic-build",
  "workspace-hack",
 ]
 
@@ -2657,10 +2525,10 @@ dependencies = [
 name = "grpc-binary-logger-test-proto"
 version = "0.1.0"
 dependencies = [
- "prost 0.11.9",
- "prost-build 0.11.9",
- "tonic 0.9.2",
- "tonic-build 0.9.2",
+ "prost",
+ "prost-build",
+ "tonic",
+ "tonic-build",
  "workspace-hack",
 ]
 
@@ -2736,7 +2604,7 @@ version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c6201b9ff9fd90a5a3bac2e56a830d0caa509576f0e503818ee82c181b3437a"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "allocator-api2",
 ]
 
@@ -3026,7 +2894,7 @@ version = "0.11.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73c0fefcb6d409a6587c07515951495d482006f89a21daa0f2f783aa4fd5e027"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "indexmap 2.0.0",
  "is-terminal",
  "itoa",
@@ -3090,8 +2958,8 @@ dependencies = [
 name = "influxdb_iox"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "assert_cmd",
  "assert_matches",
@@ -3101,7 +2969,7 @@ dependencies = [
  "bytes",
  "clap",
  "clap_blocks",
- "comfy-table 7.0.1",
+ "comfy-table",
  "compactor",
  "console-subscriber",
  "data_types",
@@ -3149,7 +3017,7 @@ dependencies = [
  "predicates",
  "pretty_assertions",
  "proptest",
- "prost 0.11.9",
+ "prost",
  "rustyline",
  "schema",
  "serde",
@@ -3165,7 +3033,7 @@ dependencies = [
  "tokio-stream",
  "tokio-util",
  "tokio_metrics_bridge",
- "tonic 0.9.2",
+ "tonic",
  "trace_exporters",
  "trogging",
  "uuid",
@@ -3178,17 +3046,17 @@ dependencies = [
 name = "influxdb_iox_client"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "bytes",
  "client_util",
- "comfy-table 7.0.1",
+ "comfy-table",
  "futures-util",
  "generated_types",
  "influxdb-line-protocol",
  "insta",
- "prost 0.11.9",
+ "prost",
  "rand",
  "reqwest",
  "schema",
@@ -3196,7 +3064,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
 ]
 
 [[package]]
@@ -3207,8 +3075,8 @@ dependencies = [
  "futures-util",
  "generated_types",
  "observability_deps",
- "prost 0.11.9",
- "tonic 0.9.2",
+ "prost",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -3241,8 +3109,8 @@ dependencies = [
 name = "ingester"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "assert_matches",
  "async-channel",
@@ -3255,7 +3123,7 @@ dependencies = [
  "data_types",
  "datafusion",
  "datafusion_util",
- "flatbuffers 23.5.26",
+ "flatbuffers",
  "futures",
  "generated_types",
  "gossip",
@@ -3282,7 +3150,7 @@ dependencies = [
  "pin-project",
  "predicate",
  "proptest",
- "prost 0.11.9",
+ "prost",
  "rand",
  "schema",
  "service_grpc_catalog",
@@ -3292,7 +3160,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "tracker",
  "uuid",
@@ -3304,7 +3172,7 @@ dependencies = [
 name = "ingester_query_client"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "async-trait",
  "backoff",
  "client_util",
@@ -3319,7 +3187,7 @@ dependencies = [
  "snafu",
  "test_helpers",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "trace_http",
  "uuid",
@@ -3330,23 +3198,23 @@ dependencies = [
 name = "ingester_query_grpc"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "base64 0.21.3",
  "bytes",
  "data_types",
  "datafusion",
  "datafusion-proto",
- "flatbuffers 23.5.26",
+ "flatbuffers",
  "pbjson",
  "pbjson-build",
  "predicate",
- "prost 0.11.9",
- "prost-build 0.11.9",
+ "prost",
+ "prost-build",
  "query_functions",
  "serde",
  "snafu",
- "tonic 0.9.2",
- "tonic-build 0.9.2",
+ "tonic",
+ "tonic-build",
  "workspace-hack",
 ]
 
@@ -3354,8 +3222,8 @@ dependencies = [
 name = "ingester_test_ctx"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "bytes",
  "data_types",
  "dml",
@@ -3374,12 +3242,12 @@ dependencies = [
  "object_store",
  "observability_deps",
  "parquet_file",
- "prost 0.11.9",
+ "prost",
  "tempfile",
  "test_helpers",
  "tokio",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "workspace-hack",
 ]
@@ -3526,7 +3394,7 @@ dependencies = [
 name = "iox_query"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "arrow_util",
  "assert_matches",
  "async-trait",
@@ -3562,7 +3430,7 @@ dependencies = [
 name = "iox_query_influxql"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "assert_matches",
  "chrono",
  "chrono-tz",
@@ -3589,7 +3457,7 @@ dependencies = [
 name = "iox_query_influxrpc"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "arrow_util",
  "data_types",
  "datafusion",
@@ -3612,7 +3480,7 @@ dependencies = [
 name = "iox_tests"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "data_types",
  "datafusion",
  "datafusion_util",
@@ -3671,11 +3539,11 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "tonic-health",
  "tonic-reflection",
  "tower",
- "tower-http 0.4.4",
+ "tower-http",
  "trace",
  "trace_exporters",
  "trace_http",
@@ -3725,7 +3593,7 @@ dependencies = [
 name = "ioxd_ingester"
 version = "0.1.0"
 dependencies = [
- "arrow-flight 46.0.0",
+ "arrow-flight",
  "async-trait",
  "clap_blocks",
  "futures",
@@ -3748,7 +3616,7 @@ dependencies = [
 name = "ioxd_querier"
 version = "0.1.0"
 dependencies = [
- "arrow-flight 46.0.0",
+ "arrow-flight",
  "async-trait",
  "authz",
  "clap_blocks",
@@ -3772,7 +3640,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "workspace-hack",
 ]
@@ -4189,12 +4057,6 @@ dependencies = [
 
 [[package]]
 name = "matchit"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73cbba799671b762df5a175adf59ce145165747bb891505c43d09aefbbf38beb"
-
-[[package]]
-name = "matchit"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed1202b2a6f884ae56f04cff409ab315c5ce26b5e58d7412e484f01fd52f52ef"
@@ -4361,30 +4223,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 
 [[package]]
-name = "multiversion"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "025c962a3dd3cc5e0e520aa9c612201d127dcdf28616974961a649dca64f5373"
-dependencies = [
- "multiversion-macros",
-]
-
-[[package]]
-name = "multiversion-macros"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8a3e2bde382ebf960c1f3e79689fa5941625fe9bf694a1cb64af3e85faff3af"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "mutable_batch"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "arrow_util",
  "assert_matches",
  "chrono",
@@ -4448,7 +4290,7 @@ dependencies = [
  "mutable_batch",
  "mutable_batch_lp",
  "mutable_batch_pb",
- "prost 0.11.9",
+ "prost",
 ]
 
 [[package]]
@@ -4626,8 +4468,8 @@ name = "nu-command"
 version = "0.84.0"
 dependencies = [
  "alphanumeric-sort",
- "arrow 19.0.0",
- "arrow-flight 19.0.0",
+ "arrow",
+ "arrow-flight",
  "base64 0.21.3",
  "bracoxide",
  "byteorder",
@@ -5341,7 +5183,7 @@ name = "parquet"
 version = "46.0.0"
 source = "git+https://github.com/alamb/arrow-rs.git?rev=1d0093c172ea1501c9fc9f38be1791f47ac372e4#1d0093c172ea1501c9fc9f38be1791f47ac372e4"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "arrow-array",
  "arrow-buffer",
  "arrow-cast",
@@ -5373,7 +5215,7 @@ dependencies = [
 name = "parquet_file"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "base64 0.21.3",
  "bytes",
  "data_types",
@@ -5386,7 +5228,7 @@ dependencies = [
  "observability_deps",
  "parquet",
  "pbjson-types",
- "prost 0.11.9",
+ "prost",
  "rand",
  "schema",
  "snafu",
@@ -5456,8 +5298,8 @@ checksum = "bdbb7b706f2afc610f3853550cdbbf6372fd324824a087806bd4480ea4996e24"
 dependencies = [
  "heck",
  "itertools 0.10.5",
- "prost 0.11.9",
- "prost-types 0.11.9",
+ "prost",
+ "prost-types",
 ]
 
 [[package]]
@@ -5470,8 +5312,8 @@ dependencies = [
  "chrono",
  "pbjson",
  "pbjson-build",
- "prost 0.11.9",
- "prost-build 0.11.9",
+ "prost",
+ "prost-build",
  "serde",
 ]
 
@@ -5692,9 +5534,9 @@ dependencies = [
  "nix 0.26.4",
  "once_cell",
  "parking_lot",
- "prost 0.11.9",
- "prost-build 0.11.9",
- "prost-derive 0.11.9",
+ "prost",
+ "prost-build",
+ "prost-derive",
  "protobuf",
  "sha2",
  "smallvec",
@@ -5713,7 +5555,7 @@ checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 name = "predicate"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "chrono",
  "data_types",
  "datafusion",
@@ -5875,44 +5717,12 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.10.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71adf41db68aa0daaefc69bb30bcd68ded9b9abaad5d1fbb6304c4fb390e083e"
-dependencies = [
- "bytes",
- "prost-derive 0.10.1",
-]
-
-[[package]]
-name = "prost"
 version = "0.11.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b82eaa1d779e9a4bc1c3217db8ffbeabaae1dca241bf70183242128d48681cd"
 dependencies = [
  "bytes",
- "prost-derive 0.11.9",
-]
-
-[[package]]
-name = "prost-build"
-version = "0.10.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ae5a4388762d5815a9fc0dea33c56b021cdc8dde0c55e0c9ca57197254b0cab"
-dependencies = [
- "bytes",
- "cfg-if",
- "cmake",
- "heck",
- "itertools 0.10.5",
- "lazy_static",
- "log",
- "multimap",
- "petgraph",
- "prost 0.10.4",
- "prost-types 0.10.1",
- "regex",
- "tempfile",
- "which",
+ "prost-derive",
 ]
 
 [[package]]
@@ -5929,25 +5739,12 @@ dependencies = [
  "multimap",
  "petgraph",
  "prettyplease",
- "prost 0.11.9",
- "prost-types 0.11.9",
+ "prost",
+ "prost-types",
  "regex",
  "syn 1.0.109",
  "tempfile",
  "which",
-]
-
-[[package]]
-name = "prost-derive"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b670f45da57fb8542ebdbb6105a925fe571b67f9e7ed9f47a06a84e72b4e7cc"
-dependencies = [
- "anyhow",
- "itertools 0.10.5",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -5965,21 +5762,11 @@ dependencies = [
 
 [[package]]
 name = "prost-types"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d0a014229361011dc8e69c8a1ec6c2e8d0f2af7c91e3ea3f5b2170298461e68"
-dependencies = [
- "bytes",
- "prost 0.10.4",
-]
-
-[[package]]
-name = "prost-types"
 version = "0.11.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "213622a1460818959ac1181aaeb2dc9c7f63df720db7d788b3e24eacd1983e13"
 dependencies = [
- "prost 0.11.9",
+ "prost",
 ]
 
 [[package]]
@@ -6008,8 +5795,8 @@ dependencies = [
 name = "querier"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "assert_matches",
  "async-trait",
@@ -6039,7 +5826,7 @@ dependencies = [
  "parquet_file",
  "pin-project",
  "predicate",
- "prost 0.11.9",
+ "prost",
  "rand",
  "schema",
  "service_common",
@@ -6047,7 +5834,7 @@ dependencies = [
  "test_helpers",
  "tokio",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "trace_http",
  "tracker",
@@ -6059,7 +5846,7 @@ dependencies = [
 name = "query_functions"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "chrono",
  "datafusion",
  "datafusion_util",
@@ -6411,7 +6198,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "trace_http",
  "workspace-hack",
@@ -6657,7 +6444,7 @@ dependencies = [
 name = "schema"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "hashbrown 0.14.0",
  "indexmap 2.0.0",
  "observability_deps",
@@ -6796,7 +6583,7 @@ dependencies = [
  "metric",
  "parking_lot",
  "predicate",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "tracker",
  "workspace-hack",
@@ -6812,7 +6599,7 @@ dependencies = [
  "metric",
  "observability_deps",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "uuid",
  "workspace-hack",
 ]
@@ -6821,8 +6608,8 @@ dependencies = [
 name = "service_grpc_flight"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "assert_matches",
  "async-trait",
  "authz",
@@ -6835,14 +6622,14 @@ dependencies = [
  "iox_query",
  "metric",
  "observability_deps",
- "prost 0.11.9",
+ "prost",
  "serde",
  "serde_json",
  "service_common",
  "snafu",
  "test_helpers",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "trace_http",
  "tracker",
@@ -6853,7 +6640,7 @@ dependencies = [
 name = "service_grpc_influxrpc"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
+ "arrow",
  "data_types",
  "datafusion",
  "datafusion_util",
@@ -6867,7 +6654,7 @@ dependencies = [
  "parking_lot",
  "pin-project",
  "predicate",
- "prost 0.11.9",
+ "prost",
  "query_functions",
  "regex",
  "schema",
@@ -6879,7 +6666,7 @@ dependencies = [
  "test_helpers",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
  "trace",
  "trace_http",
  "tracker",
@@ -6898,7 +6685,7 @@ dependencies = [
  "observability_deps",
  "paste",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -6916,7 +6703,7 @@ dependencies = [
  "observability_deps",
  "parquet_file",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "uuid",
  "workspace-hack",
 ]
@@ -6931,7 +6718,7 @@ dependencies = [
  "metric",
  "observability_deps",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -6945,7 +6732,7 @@ dependencies = [
  "metric",
  "observability_deps",
  "tokio",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -6955,7 +6742,7 @@ version = "0.1.0"
 dependencies = [
  "generated_types",
  "observability_deps",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -7241,7 +7028,7 @@ version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd4cef4251aabbae751a3710927945901ee1d97ee96d757f6880ebb9a79bfd53"
 dependencies = [
- "ahash 0.8.3",
+ "ahash",
  "atoi",
  "byteorder",
  "bytes",
@@ -7712,8 +7499,8 @@ dependencies = [
 name = "test_helpers_end_to_end"
 version = "0.1.0"
 dependencies = [
- "arrow 46.0.0",
- "arrow-flight 46.0.0",
+ "arrow",
+ "arrow-flight",
  "arrow_util",
  "assert_cmd",
  "bytes",
@@ -7732,7 +7519,7 @@ dependencies = [
  "observability_deps",
  "once_cell",
  "parking_lot",
- "prost 0.11.9",
+ "prost",
  "rand",
  "regex",
  "reqwest",
@@ -7742,7 +7529,7 @@ dependencies = [
  "test_helpers",
  "tokio",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "workspace-hack",
 ]
 
@@ -8028,45 +7815,13 @@ dependencies = [
 
 [[package]]
 name = "tonic"
-version = "0.7.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5be9d60db39854b30b835107500cf0aca0b0d14d6e1c3de124217c23a29c2ddb"
-dependencies = [
- "async-stream",
- "async-trait",
- "axum 0.5.17",
- "base64 0.13.1",
- "bytes",
- "futures-core",
- "futures-util",
- "h2",
- "http",
- "http-body",
- "hyper",
- "hyper-timeout",
- "percent-encoding",
- "pin-project",
- "prost 0.10.4",
- "prost-derive 0.10.1",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tower",
- "tower-layer",
- "tower-service",
- "tracing",
- "tracing-futures",
-]
-
-[[package]]
-name = "tonic"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3082666a3a6433f7f511c7192923fa1fe07c69332d3c6a2e6bb040b569199d5a"
 dependencies = [
  "async-stream",
  "async-trait",
- "axum 0.6.20",
+ "axum",
  "base64 0.21.3",
  "bytes",
  "futures-core",
@@ -8078,7 +7833,7 @@ dependencies = [
  "hyper-timeout",
  "percent-encoding",
  "pin-project",
- "prost 0.11.9",
+ "prost",
  "rustls-pemfile",
  "tokio",
  "tokio-rustls",
@@ -8092,26 +7847,13 @@ dependencies = [
 
 [[package]]
 name = "tonic-build"
-version = "0.7.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9263bf4c9bfaae7317c1c2faf7f18491d2fe476f70c414b73bf5d445b00ffa1"
-dependencies = [
- "prettyplease",
- "proc-macro2",
- "prost-build 0.10.4",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "tonic-build"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a6fdaae4c2c638bb70fe42803a26fbd6fc6ac8c72f5c59f67ecc2a2dcabf4b07"
 dependencies = [
  "prettyplease",
  "proc-macro2",
- "prost-build 0.11.9",
+ "prost-build",
  "quote",
  "syn 1.0.109",
 ]
@@ -8123,10 +7865,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "080964d45894b90273d2b1dd755fdd114560db8636bb41cea615213c45043c4d"
 dependencies = [
  "async-stream",
- "prost 0.11.9",
+ "prost",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
 ]
 
 [[package]]
@@ -8135,11 +7877,11 @@ version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0543d7092032041fbeac1f2c84304537553421a11a623c2301b12ef0264862c7"
 dependencies = [
- "prost 0.11.9",
- "prost-types 0.11.9",
+ "prost",
+ "prost-types",
  "tokio",
  "tokio-stream",
- "tonic 0.9.2",
+ "tonic",
 ]
 
 [[package]]
@@ -8160,25 +7902,6 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
-]
-
-[[package]]
-name = "tower-http"
-version = "0.3.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f873044bf02dd1e8239e9c1293ea39dad76dc594ec16185d0a1bf31d8dc8d858"
-dependencies = [
- "bitflags 1.3.2",
- "bytes",
- "futures-core",
- "futures-util",
- "http",
- "http-body",
- "http-range-header",
- "pin-project-lite",
- "tower",
- "tower-layer",
- "tower-service",
 ]
 
 [[package]]
@@ -8291,16 +8014,6 @@ checksum = "0955b8137a1df6f1a2e9a37d8a6656291ff0297c1a97c24e0d8425fe2312f79a"
 dependencies = [
  "once_cell",
  "valuable",
-]
-
-[[package]]
-name = "tracing-futures"
-version = "0.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97d095ae15e245a057c8e8451bab9b3ee1e1f68e9ba2b4fbc18d0ac5237835f2"
-dependencies = [
- "pin-project",
- "tracing",
 ]
 
 [[package]]
@@ -8659,7 +8372,7 @@ dependencies = [
  "mutable_batch_pb",
  "observability_deps",
  "parking_lot",
- "prost 0.11.9",
+ "prost",
  "snafu",
  "snap",
  "test_helpers",
@@ -9064,10 +8777,10 @@ dependencies = [
 name = "workspace-hack"
 version = "0.1.0"
 dependencies = [
- "ahash 0.8.3",
- "arrow 46.0.0",
+ "ahash",
+ "arrow",
  "arrow-array",
- "arrow-flight 46.0.0",
+ "arrow-flight",
  "arrow-string",
  "base64 0.21.3",
  "bitflags 2.4.0",
@@ -9083,7 +8796,7 @@ dependencies = [
  "digest",
  "either",
  "fixedbitset",
- "flatbuffers 23.5.26",
+ "flatbuffers",
  "futures-channel",
  "futures-core",
  "futures-executor",
@@ -9111,8 +8824,8 @@ dependencies = [
  "phf_shared",
  "predicates",
  "proptest",
- "prost 0.11.9",
- "prost-types 0.11.9",
+ "prost",
+ "prost-types",
  "rand",
  "rand_core",
  "regex",
@@ -9139,7 +8852,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-util",
- "tonic 0.9.2",
+ "tonic",
  "tower",
  "tracing",
  "tracing-core",

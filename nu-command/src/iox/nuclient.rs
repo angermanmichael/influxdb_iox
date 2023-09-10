@@ -1,3 +1,4 @@
+use std::str::FromStr;
 use std::{sync::Arc, time::Instant};
 
 use arrow::{
@@ -190,10 +191,10 @@ impl Nuclient {
 
     /// Prints to the specified output format
     fn print_results(&self, batches: &[RecordBatch]) -> Result<()> {
-        let formatted_results = self
-            .output_format
-            .format(batches)
-            .context(FormattingResultsSnafu)?;
+        let output_format = &self.output_format.to_string();
+
+        let qof = QueryOutputFormat::from_str(output_format).unwrap();
+        let formatted_results = qof.format(batches).context(FormattingResultsSnafu)?;
         println!("{}", formatted_results);
         Ok(())
     }
