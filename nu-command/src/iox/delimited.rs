@@ -1,4 +1,5 @@
 use csv::{ReaderBuilder, Trim};
+use nu_protocol::IntoPipelineData;
 use nu_protocol::{Config, PipelineData, ShellError, Span, Value};
 
 fn from_delimited_string_to_value(
@@ -65,13 +66,27 @@ pub fn from_delimited_data(
     name: Span,
     config: &Config,
 ) -> Result<PipelineData, ShellError> {
-    let concat_string = input.collect_string("", config)?;
+    let (concat_string, _span, metadata) = input.collect_string_strict(name)?;
+
+    //let concat_string = input.collect_string("", config)?;
 
     Ok(
         from_delimited_string_to_value(concat_string, noheaders, no_infer, sep, trim, name)
-            .map_err(|x| ShellError::DelimiterError(x.to_string(), name))?
-            .into_pipeline_data(),
+            .map_err(|x| ShellError::DelimiterError {
+                msg: x.to_string(),
+                span: name,
+            })?
+            .into_pipeline_data_with_metadata(metadata), //.into_pipeline_data(),
     )
+
+    /*
+    Ok(from_delimited_string_to_value(config, concat_string, name)
+        .map_err(|x| ShellError::DelimiterError {
+            msg: x.to_string(),
+            span: name,
+        })?
+        .into_pipeline_data_with_metadata(metadata))
+        */
 }
 
 pub fn trim_from_str(trim: Option<Value>) -> Result<Trim, ShellError> {
@@ -84,9 +99,47 @@ pub fn trim_from_str(trim: Option<Value>) -> Result<Trim, ShellError> {
             _ => Err(ShellError::UnsupportedInput(
                 "the only possible values for trim are 'all', 'headers', 'fields' and 'none'"
                     .into(),
+                "add another message here".into(),
                 span,
+                trim.unwrap().expect_span(),
             )),
         },
         _ => Ok(Trim::None),
     }
 }
+
+// This is the new code from the latest nushell
+/*
+pub fn from_delimited_data(
+    config: DelimitedReaderConfig,
+    input: PipelineData,
+    name: Span,
+) -> Result<PipelineData, ShellError> {
+    let (concat_string, _span, metadata) = input.collect_string_strict(name)?;
+
+    Ok(from_delimited_string_to_value(config, concat_string, name)
+        .map_err(|x| ShellError::DelimiterError {
+            msg: x.to_string(),
+            span: name,
+        })?
+        .into_pipeline_data_with_metadata(metadata))
+}
+
+pub fn trim_from_str(trim: Option<Value>) -> Result<Trim, ShellError> {
+    match trim {
+        Some(Value::String { val: item, span }) => match item.as_str() {
+            "all" => Ok(Trim::All),
+            "headers" => Ok(Trim::Headers),
+            "fields" => Ok(Trim::Fields),
+            "none" => Ok(Trim::None),
+            _ => Err(ShellError::TypeMismatch {
+                err_message:
+                    "the only possible values for trim are 'all', 'headers', 'fields' and 'none'"
+                        .into(),
+                span,
+            }),
+        },
+        _ => Ok(Trim::None),
+    }
+}
+*/
