@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use std::{sync::Arc, time::Instant};
+use std::sync::Arc;
 
 use arrow::{
     array::{ArrayRef, Int64Array, StringArray},
@@ -98,14 +98,14 @@ impl Nuclient {
     }
 
     // Run a command against the currently selected remote namespace
-    async fn run_sql(&mut self, sql: String) -> Result<()> {
-        let start = Instant::now();
-
+    //
+    //
+    pub async fn run_sql(&mut self, sql: String) -> Result<String> {
         let batches: Vec<_> = match &self.query_engine {
             None => {
                 println!("Error: no namespace selected.");
                 println!("Hint: Run USE NAMESPACE <dbname> to select namespace");
-                return Ok(());
+                return Ok("Error: no namespace selected.".to_string());
             }
             Some(QueryEngine::Remote(db_name)) => {
                 info!(%db_name, %sql, "Running sql on remote namespace");
@@ -120,15 +120,8 @@ impl Nuclient {
             }
         };
 
-        let end = Instant::now();
-        self.print_results(&batches)?;
-
-        println!(
-            "Returned {} in {:?}",
-            Self::row_summary(&batches),
-            end - start
-        );
-        Ok(())
+        let result_str = self.get_results(&batches)?;
+        Ok(result_str)
     }
 
     fn row_summary<'a>(batches: impl IntoIterator<Item = &'a RecordBatch>) -> String {

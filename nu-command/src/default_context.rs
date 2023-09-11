@@ -385,6 +385,14 @@ pub fn add_shell_command_context(mut engine_state: EngineState) -> EngineState {
             HashSha256::default(),
         };
 
+        // Iox
+        bind_command! {
+            //Ioxnamespace,
+            Ioxsql,
+            //Ioxwrite,
+            //Ioxwritefile,
+        }
+
         // Experimental
         bind_command! {
             IsAdmin,
