@@ -1,6 +1,10 @@
 
 ### Branch History
 
+### nu84b2d
+
+* ioxsql is up and running now move on to get the other commands working
+
 ### nu84b2c
 
 Now that *nushell* is up and running and we have the *nuclient* infrastructure
