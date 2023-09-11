@@ -1,10 +1,15 @@
 
 ### Branch History
 
+### nu84b2c
+
+Now that *nushell* is up and running and we have the *nuclient* infrastructure
+in place lets start adding in our first command to talk to iox.
+
 ### nu84b2b
 
 *nu-command* is now compiling, now lets integrate in the nushell binary so
-we can bring up nushell and start running the iox commands inside nushell. 
+we can bring up nushell and start running the iox commands inside nushell.
 
 ### nu84b2a
 
