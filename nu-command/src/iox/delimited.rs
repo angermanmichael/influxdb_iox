@@ -64,7 +64,7 @@ pub fn from_delimited_data(
     trim: Trim,
     input: PipelineData,
     name: Span,
-    config: &Config,
+    _config: &Config,
 ) -> Result<PipelineData, ShellError> {
     let (concat_string, _span, metadata) = input.collect_string_strict(name)?;
 
@@ -80,7 +80,10 @@ pub fn from_delimited_data(
 
 pub fn trim_from_str(trim: Option<Value>) -> Result<Trim, ShellError> {
     match trim {
-        Some(Value::String { val: item, span }) => match item.as_str() {
+        Some(Value::String {
+            val: ref item,
+            span,
+        }) => match item.as_str() {
             "all" => Ok(Trim::All),
             "headers" => Ok(Trim::Headers),
             "fields" => Ok(Trim::Fields),

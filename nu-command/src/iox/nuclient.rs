@@ -8,9 +8,7 @@ use arrow::{
 use observability_deps::tracing::{debug, info};
 use snafu::{ResultExt, Snafu};
 
-use influxdb_iox_client::{
-    connection::Connection, flight::generated_types::ReadInfo, format::QueryOutputFormat,
-};
+use influxdb_iox_client::{connection::Connection, format::QueryOutputFormat};
 
 use futures_util::TryStreamExt;
 
@@ -145,34 +143,6 @@ impl Nuclient {
         }
     }
 
-    // Run a command against the currently selected remote database
-    pub async fn print_sql(&mut self, sql: String) -> Result<()> {
-        let start = Instant::now();
-
-        let batches = match &mut self.query_engine {
-            None => {
-                println!("Error: no database selected.");
-                println!("Hint: Run USE DATABASE <dbname> to select database");
-                return Ok(());
-            }
-            Some(QueryEngine::Remote(db_name)) => {
-                info!(%db_name, %sql, "Running sql on remote database");
-
-                scrape_query(&mut self.flight_client, db_name, &sql).await?
-            }
-        };
-
-        let end = Instant::now();
-        self.print_results(&batches)?;
-
-        println!(
-            "Returned {} in {:?}",
-            Self::row_summary(&batches),
-            end - start
-        );
-        Ok(())
-    }
-
     pub fn use_database(&mut self, db_name: String) {
         debug!(%db_name, "setting current database");
         println!("You are now querying the database {}", db_name);
@@ -214,31 +184,4 @@ impl Nuclient {
         println!("{}", formatted_results);
         Ok(())
     }
-}
-
-/// Runs the specified `query` and returns the record batches of the result
-async fn scrape_query(
-    client: &mut influxdb_iox_client::flight::Client,
-    db_name: &str,
-    query: &str,
-) -> Result<Vec<RecordBatch>> {
-    let mut query_results = client
-        .perform_query(ReadInfo {
-            namespace_name: db_name.to_string(),
-            sql_query: query.to_string(),
-        })
-        .await
-        .context(RunningRemoteQuerySnafu)?;
-
-    let mut batches = vec![];
-
-    while let Some(data) = query_results
-        .next()
-        .await
-        .context(RunningRemoteQuerySnafu)?
-    {
-        batches.push(data);
-    }
-
-    Ok(batches)
 }
