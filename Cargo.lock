@@ -4489,6 +4489,7 @@ dependencies = [
  "filesize",
  "filetime",
  "fs_extra",
+ "futures-util",
  "htmlescape",
  "indexmap 2.0.0",
  "indicatif",

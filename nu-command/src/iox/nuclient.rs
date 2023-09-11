@@ -12,6 +12,8 @@ use influxdb_iox_client::{
     connection::Connection, flight::generated_types::ReadInfo, format::QueryOutputFormat,
 };
 
+use futures_util::TryStreamExt;
+
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("Error loading remote state: {}", source))]
@@ -97,24 +99,50 @@ impl Nuclient {
         Ok(result_str)
     }
 
-    // Run a command against the currently selected remote database
-    pub async fn run_sql(&mut self, sql: String) -> Result<String> {
-        let batches = match &mut self.query_engine {
+    // Run a command against the currently selected remote namespace
+    async fn run_sql(&mut self, sql: String) -> Result<()> {
+        let start = Instant::now();
+
+        let batches: Vec<_> = match &self.query_engine {
             None => {
-                println!("Error: no database selected.");
-                println!("Hint: Run USE DATABASE <dbname> to select database");
-                return Ok("Error: no database selected".to_string());
+                println!("Error: no namespace selected.");
+                println!("Hint: Run USE NAMESPACE <dbname> to select namespace");
+                return Ok(());
             }
             Some(QueryEngine::Remote(db_name)) => {
-                info!(%db_name, %sql, "Running sql on remote database");
+                info!(%db_name, %sql, "Running sql on remote namespace");
 
-                scrape_query(&mut self.flight_client, db_name, &sql).await?
+                self.flight_client
+                    .sql(db_name.to_string(), sql)
+                    .await
+                    .context(RunningRemoteQuerySnafu)?
+                    .try_collect()
+                    .await
+                    .context(RunningRemoteQuerySnafu)?
             }
         };
 
-        let result_str = self.get_results(&batches)?;
+        let end = Instant::now();
+        self.print_results(&batches)?;
 
-        Ok(result_str)
+        println!(
+            "Returned {} in {:?}",
+            Self::row_summary(&batches),
+            end - start
+        );
+        Ok(())
+    }
+
+    fn row_summary<'a>(batches: impl IntoIterator<Item = &'a RecordBatch>) -> String {
+        let total_rows: usize = batches.into_iter().map(|b| b.num_rows()).sum();
+
+        if total_rows > 1 {
+            format!("{total_rows} rows")
+        } else if total_rows == 0 {
+            "no rows".to_string()
+        } else {
+            "1 row".to_string()
+        }
     }
 
     // Run a command against the currently selected remote database
@@ -143,18 +171,6 @@ impl Nuclient {
             end - start
         );
         Ok(())
-    }
-
-    fn row_summary<'a>(batches: impl IntoIterator<Item = &'a RecordBatch>) -> String {
-        let total_rows: usize = batches.into_iter().map(|b| b.num_rows()).sum();
-
-        if total_rows > 1 {
-            format!("{} rows", total_rows)
-        } else if total_rows == 0 {
-            "no rows".to_string()
-        } else {
-            "1 row".to_string()
-        }
     }
 
     pub fn use_database(&mut self, db_name: String) {
