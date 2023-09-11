@@ -1,6 +1,11 @@
 
 ### Branch History
 
+### nu84b2b
+
+*nu-command* is now compiling, now lets integrate in the nushell binary so
+we can bring up nushell and start running the iox commands inside nushell. 
+
 ### nu84b2a
 
 add back in the needed crates for nu-command and remove the files I am not
