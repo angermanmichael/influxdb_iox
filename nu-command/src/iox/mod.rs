@@ -1,4 +1,5 @@
 mod delimited;
+mod namespace;
 mod nuclient;
 mod nuerror;
 mod sql;
@@ -7,6 +8,7 @@ mod write;
 mod writefile;
 
 pub use delimited::*;
+pub use namespace::*;
 pub use nuclient::*;
 pub use nuerror::*;
 pub use sql::*;
