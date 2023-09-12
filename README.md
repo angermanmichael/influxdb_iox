@@ -1,6 +1,10 @@
 
 ### Branch History
 
+### nu84b2e
+
+* get the latest iox code and merge it on to this branch
+
 ### nu84b2d
 
 * ioxsql is up and running now move on to get the other commands working
