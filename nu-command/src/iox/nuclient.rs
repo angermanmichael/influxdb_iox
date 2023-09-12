@@ -124,6 +124,7 @@ impl Nuclient {
         Ok(result_str)
     }
 
+    #[allow(dead_code)]
     fn row_summary<'a>(batches: impl IntoIterator<Item = &'a RecordBatch>) -> String {
         let total_rows: usize = batches.into_iter().map(|b| b.num_rows()).sum();
 
@@ -169,6 +170,7 @@ impl Nuclient {
     }
 
     /// Prints to the specified output format
+    #[allow(dead_code)]
     fn print_results(&self, batches: &[RecordBatch]) -> Result<()> {
         let output_format = &self.output_format.to_string();
 
