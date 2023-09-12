@@ -7,7 +7,7 @@
 
 ### nu84b2d
 
-* ioxsql is up and running now move on to get the other commands working
+* all of the nushell commands are now working on this branch
 
 ### nu84b2c
 
