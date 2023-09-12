@@ -1,6 +1,10 @@
 
 ### Branch History
 
+### nu84b2f
+
+* start work on fixing the errors so nushell never crashes
+
 ### nu84b2e
 
 * get the latest iox code and merge it on to this branch
