@@ -10,6 +10,7 @@ use nu_protocol::{
 };
 
 use csv::Trim;
+use predicates::prelude::*;
 
 #[derive(Clone)]
 pub struct Ioxsql;
@@ -56,10 +57,19 @@ impl Command for Ioxsql {
         };
 
         let sql_result = tokio_block_sql(&dbname, &sql);
-        //println!("sql_result = {:?}", sql_result);
+        println!("sql_result = {:?}\n", sql_result);
+
+        let value_predicate = predicate::str::contains(
+            r#"message: \"Error while planning query: SQL error: ParserError"#,
+        );
+
+        let answer = value_predicate
+            .eval(r#"message: \"Error while planning query: SQL error: ParserError"#);
+
+        println!("answer = {:?}\n", answer);
 
         let numofrecords = number_of_csv_records(&sql_result.as_ref().unwrap());
-        //println!("number of csv records = {:?}", numofrecords);
+        println!("number of csv records = {:?}\n", numofrecords);
 
         let not_csv_data = match numofrecords.unwrap() {
             d if d > 0 => false,

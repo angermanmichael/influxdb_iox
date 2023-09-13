@@ -4657,6 +4657,7 @@ dependencies = [
  "pathdiff",
  "percent-encoding",
  "powierza-coefficient",
+ "predicates",
  "print-positions",
  "quick-xml 0.30.0",
  "quickcheck",
