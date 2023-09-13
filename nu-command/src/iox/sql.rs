@@ -15,6 +15,8 @@ use predicates::prelude::*;
 #[derive(Clone)]
 pub struct Ioxsql;
 
+const SQL_PARSER_ERROR: &str = r#"message: \"Error while planning query: SQL error: ParserError"#;
+
 impl Command for Ioxsql {
     fn name(&self) -> &str {
         "ioxsql"
@@ -63,20 +65,19 @@ impl Command for Ioxsql {
             r#"message: \"Error while planning query: SQL error: ParserError"#,
         );
 
-        let answer = value_predicate
-            .eval(r#"message: \"Error while planning query: SQL error: ParserError"#);
+        let parse_error = value_predicate.eval(SQL_PARSER_ERROR);
 
-        println!("answer = {:?}\n", answer);
+        if parse_error {
+            return Err(ShellError::GenericError(
+                "Cannot move columns".to_string(),
+                "Use either --after, or --before, not both".to_string(),
+                Some(call.head),
+                None,
+                Vec::new(),
+            ));
+        }
 
-        let numofrecords = number_of_csv_records(&sql_result.as_ref().unwrap());
-        println!("number of csv records = {:?}\n", numofrecords);
-
-        let not_csv_data = match numofrecords.unwrap() {
-            d if d > 0 => false,
-            _ => true,
-        };
-
-        if not_csv_data {
+        if parse_error {
             let nierrorhandler = NuIoxErrorHandler::new(
                 super::nuerror::CommandType::Sql,
                 sql_result.as_ref().unwrap().to_string(),
