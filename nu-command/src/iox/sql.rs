@@ -1,7 +1,7 @@
 use super::delimited::from_delimited_data;
 use super::nuerror::NuIoxErrorHandler;
 
-use super::util::{get_env_var_from_engine, get_runtime, number_of_csv_records};
+use super::util::{get_env_var_from_engine, get_runtime};
 use nu_engine::CallExt;
 use nu_protocol::ast::Call;
 use nu_protocol::engine::{Command, EngineState, Stack};
