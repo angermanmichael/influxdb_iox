@@ -1,5 +1,5 @@
 use super::delimited::from_delimited_data;
-use super::nuerror::NuIoxErrorHandler;
+//use super::nuerror::NuIoxErrorHandler;
 
 use super::util::{get_env_var_from_engine, get_runtime};
 use nu_engine::CallExt;
@@ -58,12 +58,20 @@ impl Command for Ioxsql {
             get_env_var_from_engine(stack, engine_state, "IOX_DBNAME").unwrap()
         };
 
-        let sql_result = tokio_block_sql(&dbname, &sql);
-        println!("sql_result = {:?}\n", sql_result);
+        //let sql_result = tokio_block_sql(&dbname, &sql);
+        //println!("sql_result = {:?}\n", sql_result);
 
+        /*
         let value_predicate = predicate::str::contains(
             r#"message: \"Error while planning query: SQL error: ParserError"#,
         );
+        */
+
+        let str = tokio_block_sql(&dbname, &sql).unwrap_or("dog".to_string());
+
+        let y = str.clone();
+
+        let value_predicate = predicate::str::contains(str);
 
         let parse_error = value_predicate.eval(SQL_PARSER_ERROR);
 
@@ -76,16 +84,17 @@ impl Command for Ioxsql {
                 Vec::new(),
             ));
         }
+        /*
+                if parse_error {
+                    let nierrorhandler = NuIoxErrorHandler::new(
+                        super::nuerror::CommandType::Sql,
+                        sql_result.as_ref().unwrap().to_string(),
+                    );
 
-        if parse_error {
-            let nierrorhandler = NuIoxErrorHandler::new(
-                super::nuerror::CommandType::Sql,
-                sql_result.as_ref().unwrap().to_string(),
-            );
-
-            nierrorhandler.nu_iox_error_check()?;
-            nierrorhandler.nu_iox_error_generic(call)?;
-        }
+                    nierrorhandler.nu_iox_error_check()?;
+                    nierrorhandler.nu_iox_error_generic(call)?;
+                }
+        */
         let no_infer = false;
         let noheaders = false;
         let separator: char = ',';
@@ -93,7 +102,7 @@ impl Command for Ioxsql {
 
         let input = PipelineData::Value(
             Value::String {
-                val: sql_result.unwrap(),
+                val: y.to_string(),
                 span: call.head,
             },
             None,
