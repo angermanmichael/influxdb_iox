@@ -15,7 +15,7 @@ use predicates::prelude::*;
 #[derive(Clone)]
 pub struct Ioxsql;
 
-const SQL_PARSER_ERROR: &str = r#"message: \"Error while planning query: SQL error: ParserError"#;
+const SQL_PARSER_ERROR: &str = "Error running remote query:";
 
 impl Command for Ioxsql {
     fn name(&self) -> &str {
@@ -67,15 +67,18 @@ impl Command for Ioxsql {
         );
         */
 
-        let str = tokio_block_sql(&dbname, &sql).unwrap_or("dog".to_string());
+        let check_sql_result = tokio_block_sql(&dbname, &sql).unwrap_or("dog".to_string());
+        println!("check_sql_result = {:?}\n", check_sql_result);
 
-        let y = str.clone();
+        let sql = check_sql_result.clone();
 
-        let value_predicate = predicate::str::contains(str);
+        let value_predicate = predicate::str::contains(SQL_PARSER_ERROR);
 
-        let parse_error = value_predicate.eval(SQL_PARSER_ERROR);
+        let parse_error = value_predicate.eval(&check_sql_result);
 
-        if parse_error {
+        println!("parse_error = {:?}\n", parse_error);
+
+        if !parse_error {
             return Err(ShellError::GenericError(
                 "Cannot move columns".to_string(),
                 "Use either --after, or --before, not both".to_string(),
@@ -102,7 +105,7 @@ impl Command for Ioxsql {
 
         let input = PipelineData::Value(
             Value::String {
-                val: y.to_string(),
+                val: sql.to_string(),
                 span: call.head,
             },
             None,
