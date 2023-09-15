@@ -58,6 +58,7 @@ members = [
     "mutable_batch_pb",
     "mutable_batch_tests",
     "mutable_batch",
+    "nu-cmd-iox",
     "nu-command",
     "nushell",
     "object_store_metrics",
