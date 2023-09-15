@@ -1,5 +1,4 @@
 use super::delimited::from_delimited_data;
-//use super::nuerror::NuIoxErrorHandler;
 
 use super::util::{get_env_var_from_engine, get_runtime};
 use nu_engine::CallExt;
@@ -58,46 +57,23 @@ impl Command for Ioxsql {
             get_env_var_from_engine(stack, engine_state, "IOX_DBNAME").unwrap()
         };
 
-        //let sql_result = tokio_block_sql(&dbname, &sql);
-        //println!("sql_result = {:?}\n", sql_result);
-
-        /*
-        let value_predicate = predicate::str::contains(
-            r#"message: \"Error while planning query: SQL error: ParserError"#,
-        );
-        */
-
         let check_sql_result = tokio_block_sql(&dbname, &sql).unwrap_or("dog".to_string());
-        println!("check_sql_result = {:?}\n", check_sql_result);
-
+        //println!("check_sql_result = {:?}\n", check_sql_result);
         let sql = check_sql_result.clone();
-
         let value_predicate = predicate::str::contains(SQL_PARSER_ERROR);
-
         let parse_error = value_predicate.eval(&check_sql_result);
-
-        println!("parse_error = {:?}\n", parse_error);
+        //println!("parse_error = {:?}\n", parse_error);
 
         if parse_error {
             return Err(ShellError::GenericError(
-                "Cannot move columns".to_string(),
-                "Use either --after, or --before, not both".to_string(),
+                "Your SQL is not properly formed ".to_string(),
+                "Please enter an SQL string that will execute a query".to_string(),
                 Some(call.head),
                 None,
                 Vec::new(),
             ));
         }
-        /*
-                if parse_error {
-                    let nierrorhandler = NuIoxErrorHandler::new(
-                        super::nuerror::CommandType::Sql,
-                        sql_result.as_ref().unwrap().to_string(),
-                    );
 
-                    nierrorhandler.nu_iox_error_check()?;
-                    nierrorhandler.nu_iox_error_generic(call)?;
-                }
-        */
         let no_infer = false;
         let noheaders = false;
         let separator: char = ',';
@@ -148,9 +124,6 @@ pub fn tokio_block_sql(dbname: &String, sql: &Spanned<String>) -> Result<String,
         let mut repl = Nuclient::new(connection);
         repl.use_database(dbname.to_string());
         let _output_format = repl.set_output_format("csv");
-
-        // let rsql = repl.run_sql(sql.item.to_string()).await.expect("run_sql");
-        // rsql
 
         let rsql = repl.run_sql(sql.item.to_string()).await;
 
