@@ -4465,6 +4465,7 @@ dependencies = [
  "nu-ansi-term 0.49.0",
  "nu-cli",
  "nu-cmd-base",
+ "nu-cmd-iox",
  "nu-cmd-lang",
  "nu-color-config",
  "nu-command 0.84.0",

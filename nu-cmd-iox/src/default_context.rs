@@ -1,9 +1,7 @@
 use nu_protocol::engine::{EngineState, StateWorkingSet};
 
-use crate::{
-    help::{HelpAliases, HelpCommands, HelpExterns, HelpModules, HelpOperators},
-    *,
-};
+use crate::*;
+
 pub fn add_iox_context(mut engine_state: EngineState) -> EngineState {
     let delta = {
         let mut working_set = StateWorkingSet::new(&engine_state);
