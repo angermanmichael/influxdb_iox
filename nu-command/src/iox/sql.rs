@@ -78,7 +78,7 @@ impl Command for Ioxsql {
 
         println!("parse_error = {:?}\n", parse_error);
 
-        if !parse_error {
+        if parse_error {
             return Err(ShellError::GenericError(
                 "Cannot move columns".to_string(),
                 "Use either --after, or --before, not both".to_string(),
