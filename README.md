@@ -4,7 +4,7 @@
 ### nu84c1a
 
 * errors appear to be tucked in and working, now lets move on to busting out
-nu-cmd-iox into its own crate so that we can leave nu-command alone.  we will
+*nu-cmd-iox* into its own crate so that we can leave *nu-command* alone.  we will
 try and get all of this working prior to landing this code with the nushell 85
 release.
 
