@@ -58,13 +58,13 @@ impl Command for Ioxsql {
         };
 
         let check_sql_result = tokio_block_sql(&dbname, &sql).unwrap_or("dog".to_string());
-        //println!("check_sql_result = {:?}\n", check_sql_result);
+
         let sql = check_sql_result.clone();
         let value_predicate = predicate::str::contains(SQL_PARSER_ERROR);
         let parse_error = value_predicate.eval(&check_sql_result);
-        //println!("parse_error = {:?}\n", parse_error);
 
         if parse_error {
+            println!("check_sql_result = {:?}\n", check_sql_result);
             return Err(ShellError::GenericError(
                 "Your SQL is not properly formed ".to_string(),
                 "Please enter an SQL string that will execute a query".to_string(),
