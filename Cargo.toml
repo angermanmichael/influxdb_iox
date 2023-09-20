@@ -58,6 +58,7 @@ members = [
     "mutable_batch_pb",
     "mutable_batch_tests",
     "mutable_batch",
+    "nushell",
     "object_store_metrics",
     "observability_deps",
     "panic_logging",
