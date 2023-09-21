@@ -27,6 +27,7 @@ nu-cli = "0.85.0"
 nu-color-config = "0.85.0"
 nu-cmd-base = "0.85.0"
 nu-cmd-lang = "0.85.0"
+nu-cmd-iox = {path = "../nu-cmd-iox", version = "0.85.0" }
 nu-command = "0.85.0"
 nu-engine = "0.85.0"
 nu-explore = "0.85.0"
