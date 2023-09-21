@@ -64,10 +64,7 @@ impl Command for Ioxwritefile {
 
         println!("{:?}", nol_result);
 
-        Ok(PipelineData::Value(
-            Value::Nothing { span: call.head },
-            None,
-        ))
+        Ok(PipelineData::Value(Value::nothing(call.head), None))
     }
 
     fn examples(&self) -> Vec<Example> {

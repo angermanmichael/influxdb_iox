@@ -79,13 +79,7 @@ impl Command for Ioxsql {
         let separator: char = ',';
         let trim = Trim::None;
 
-        let input = PipelineData::Value(
-            Value::String {
-                val: sql.to_string(),
-                span: call.head,
-            },
-            None,
-        );
+        let input = PipelineData::Value(Value::string(sql.to_string(), call.head), None);
 
         let name = Span::new(0, 0);
         let config = engine_state.get_config();

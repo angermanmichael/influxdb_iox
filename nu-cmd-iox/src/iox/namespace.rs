@@ -36,13 +36,7 @@ impl Command for Ioxnamespace {
         let separator: char = ',';
         let trim = Trim::None;
 
-        let input = PipelineData::Value(
-            Value::String {
-                val: namespace_result.unwrap(),
-                span: call.head,
-            },
-            None,
-        );
+        let input = PipelineData::Value(Value::string(namespace_result.unwrap(), call.head), None);
 
         let name = Span::new(0, 0);
         let config = engine_state.get_config();
