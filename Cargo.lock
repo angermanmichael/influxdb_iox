@@ -894,6 +894,21 @@ dependencies = [
 
 [[package]]
 name = "calamine"
+version = "0.21.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95f023f9ae2c2f017564b7eca85660c3c09477bb037f2fbfbaaba732b5642a32"
+dependencies = [
+ "byteorder",
+ "codepage",
+ "encoding_rs",
+ "log",
+ "quick-xml 0.28.2",
+ "serde",
+ "zip",
+]
+
+[[package]]
+name = "calamine"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c2f67a25b1a04dfc4caf081d98bc758489a6e9b637cf566c3bc96b3cfe07aef"
@@ -963,9 +978,11 @@ checksum = "7f2c685bad3eb3d45a01354cedb7d5faa66194d1d58ba6e267a8de788f79db38"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "pure-rust-locales",
  "serde",
+ "wasm-bindgen",
  "windows-targets 0.48.5",
 ]
 
@@ -1527,6 +1544,22 @@ dependencies = [
 
 [[package]]
 name = "crossterm"
+version = "0.26.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a84cda67535339806297f1b331d6dd6320470d2a0fe65381e79ee9e156dd3d13"
+dependencies = [
+ "bitflags 1.3.2",
+ "crossterm_winapi",
+ "libc",
+ "mio",
+ "parking_lot",
+ "signal-hook",
+ "signal-hook-mio",
+ "winapi",
+]
+
+[[package]]
+name = "crossterm"
 version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f476fe445d41c9e991fd07515a6f463074b782242ccf4a5b7b1d1012e70824df"
@@ -1674,7 +1707,7 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "rand",
- "sqlparser",
+ "sqlparser 0.37.0",
  "tempfile",
  "tokio",
  "tokio-util",
@@ -1700,7 +1733,7 @@ dependencies = [
  "num_cpus",
  "object_store",
  "parquet",
- "sqlparser",
+ "sqlparser 0.37.0",
  "tokio",
  "tokio-util",
  "xz2",
@@ -1735,7 +1768,7 @@ dependencies = [
  "ahash",
  "arrow",
  "datafusion-common",
- "sqlparser",
+ "sqlparser 0.37.0",
  "strum 0.25.0",
  "strum_macros 0.25.2",
 ]
@@ -1847,7 +1880,7 @@ dependencies = [
  "datafusion-common",
  "datafusion-expr",
  "log",
- "sqlparser",
+ "sqlparser 0.37.0",
 ]
 
 [[package]]
@@ -1977,6 +2010,18 @@ checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 
 [[package]]
 name = "dtparse"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68235de3c014ade82e550337b2c88a2a884361793ed3be2d74ee703bd810e401"
+dependencies = [
+ "chrono",
+ "lazy_static",
+ "num-traits",
+ "rust_decimal",
+]
+
+[[package]]
+name = "dtparse"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "458c7cfe1c34b1ef7c2c435076064711050aedabae9952a261687c500f80e839"
@@ -2015,6 +2060,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "071a31f4ee85403370b58aca746f01041ede6f0da2730960ad001edc2b71b394"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.8.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
+dependencies = [
+ "log",
+ "regex",
 ]
 
 [[package]]
@@ -2135,6 +2190,15 @@ dependencies = [
  "cfg-if",
  "rustix 0.38.8",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "file-id"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e13be71e6ca82e91bc0cb862bebaac0b2d1924a5a1d970c822b2f98b63fda8c3"
+dependencies = [
+ "winapi-util",
 ]
 
 [[package]]
@@ -3173,7 +3237,7 @@ version = "0.1.0"
 dependencies = [
  "generated_types",
  "snafu",
- "sqlparser",
+ "sqlparser 0.37.0",
  "workspace-hack",
 ]
 
@@ -4485,11 +4549,23 @@ dependencies = [
 
 [[package]]
 name = "notify-debouncer-full"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "416969970ec751a5d702a88c6cd19ac1332abe997fce43f96db0418550426241"
+dependencies = [
+ "file-id 0.1.0",
+ "notify",
+ "parking_lot",
+ "walkdir",
+]
+
+[[package]]
+name = "notify-debouncer-full"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49f5dab59c348b9b50cf7f261960a20e389feb2713636399cd9082cd4b536154"
 dependencies = [
- "file-id",
+ "file-id 0.2.1",
  "log",
  "notify",
  "parking_lot",
@@ -4511,7 +4587,7 @@ version = "0.85.0"
 dependencies = [
  "assert_cmd",
  "criterion",
- "crossterm",
+ "crossterm 0.27.0",
  "ctrlc",
  "log",
  "miette",
@@ -4576,7 +4652,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ef8699865b5e63e2f253135d9c9c72e87584de8d2d6e2eab4869d281f9bf9db"
 dependencies = [
  "chrono",
- "crossterm",
+ "crossterm 0.27.0",
  "fancy-regex",
  "fuzzy-matcher",
  "is_executable",
@@ -4609,6 +4685,114 @@ dependencies = [
  "nu-parser",
  "nu-path",
  "nu-protocol",
+]
+
+[[package]]
+name = "nu-cmd-iox"
+version = "0.85.0"
+dependencies = [
+ "alphanumeric-sort",
+ "arrow",
+ "arrow-flight",
+ "base64 0.21.4",
+ "bracoxide",
+ "byteorder",
+ "bytesize",
+ "calamine 0.21.2",
+ "chrono",
+ "chrono-humanize",
+ "chrono-tz",
+ "crossterm 0.26.1",
+ "csv",
+ "dialoguer",
+ "digest",
+ "dirs-next",
+ "dtparse 1.5.0",
+ "encoding_rs",
+ "fancy-regex",
+ "filesize",
+ "filetime",
+ "fs_extra",
+ "futures-util",
+ "htmlescape",
+ "indexmap 2.0.0",
+ "indicatif",
+ "influxdb_iox_client",
+ "is-terminal",
+ "itertools 0.10.5",
+ "libc",
+ "log",
+ "lscolors",
+ "md-5",
+ "miette",
+ "mime",
+ "mime_guess",
+ "mockito",
+ "native-tls",
+ "nix 0.26.4",
+ "nom",
+ "notify-debouncer-full 0.2.0",
+ "nu-ansi-term 0.49.0",
+ "nu-cmd-base",
+ "nu-cmd-lang",
+ "nu-color-config",
+ "nu-engine",
+ "nu-glob",
+ "nu-json",
+ "nu-parser",
+ "nu-path",
+ "nu-pretty-hex",
+ "nu-protocol",
+ "nu-system",
+ "nu-table",
+ "nu-term-grid",
+ "nu-test-support",
+ "nu-utils",
+ "num 0.4.1",
+ "num-format",
+ "num-traits",
+ "observability_deps",
+ "once_cell",
+ "open",
+ "os_pipe",
+ "pathdiff",
+ "percent-encoding",
+ "powierza-coefficient",
+ "predicates",
+ "print-positions",
+ "quick-xml 0.30.0",
+ "quickcheck",
+ "quickcheck_macros",
+ "rand",
+ "rayon",
+ "regex",
+ "roxmltree",
+ "rstest",
+ "rusqlite",
+ "same-file",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
+ "serde_yaml",
+ "sha2",
+ "snafu",
+ "sqlparser 0.34.0",
+ "sysinfo",
+ "tabled",
+ "terminal_size 0.2.6",
+ "titlecase",
+ "tokio",
+ "toml 0.7.8",
+ "trash",
+ "umask",
+ "unicode-segmentation",
+ "ureq",
+ "url",
+ "uuid",
+ "wax",
+ "which",
+ "windows 0.48.0",
+ "winreg 0.50.0",
 ]
 
 [[package]]
@@ -4652,16 +4836,16 @@ dependencies = [
  "bracoxide",
  "byteorder",
  "bytesize",
- "calamine",
+ "calamine 0.22.0",
  "chardetng",
  "chrono",
  "chrono-humanize",
  "chrono-tz",
- "crossterm",
+ "crossterm 0.27.0",
  "csv",
  "dialoguer",
  "digest",
- "dtparse",
+ "dtparse 2.0.0",
  "encoding_rs",
  "fancy-regex",
  "filesize",
@@ -4680,7 +4864,7 @@ dependencies = [
  "mime_guess",
  "native-tls",
  "nix 0.27.1",
- "notify-debouncer-full",
+ "notify-debouncer-full 0.3.1",
  "nu-ansi-term 0.49.0",
  "nu-cmd-base",
  "nu-color-config",
@@ -4753,7 +4937,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2d3258e6118ab0924b599671617ac16ceccc36ae252f08aff920e4054f31c74"
 dependencies = [
  "ansi-str",
- "crossterm",
+ "crossterm 0.27.0",
  "lscolors",
  "nu-ansi-term 0.49.0",
  "nu-color-config",
@@ -5824,7 +6008,7 @@ dependencies = [
  "query_functions",
  "schema",
  "snafu",
- "sqlparser",
+ "sqlparser 0.37.0",
  "test_helpers",
  "workspace-hack",
 ]
@@ -6141,6 +6325,7 @@ version = "0.28.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ce5e73202a820a31f8a0ee32ada5e21029c81fd9e3ebf668a40832e4219d9d1"
 dependencies = [
+ "encoding_rs",
  "memchr",
  "serde",
 ]
@@ -6153,6 +6338,28 @@ checksum = "eff6510e86862b57b210fd8cbe8ed3f0d7d600b9c2863cd4549a2e033c66e956"
 dependencies = [
  "encoding_rs",
  "memchr",
+]
+
+[[package]]
+name = "quickcheck"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "588f6378e4dd99458b60ec275b4477add41ce4fa9f64dcba6f15adccb19b50d6"
+dependencies = [
+ "env_logger",
+ "log",
+ "rand",
+]
+
+[[package]]
+name = "quickcheck_macros"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b22a693222d716a9587786f37ac3f6b4faedb5b80c23914e7303ff5a1d8016e9"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -6211,7 +6418,7 @@ checksum = "2e2e4cd95294a85c3b4446e63ef054eea43e0205b1fd60120c16b74ff7ff96ad"
 dependencies = [
  "bitflags 2.4.0",
  "cassowary",
- "crossterm",
+ "crossterm 0.27.0",
  "indoc",
  "itertools 0.11.0",
  "paste",
@@ -6278,7 +6485,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "971ac45071721aae18927f3feb7e4c2b95cce387d96af185c5103166d332e55c"
 dependencies = [
  "chrono",
- "crossterm",
+ "crossterm 0.27.0",
  "fd-lock",
  "itertools 0.10.5",
  "nu-ansi-term 0.49.0",
@@ -7297,6 +7504,16 @@ dependencies = [
  "itertools 0.10.5",
  "nom",
  "unicode_categories",
+]
+
+[[package]]
+name = "sqlparser"
+version = "0.34.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37d3706eefb17039056234df6b566b0014f303f867f2656108334a55b8096f59"
+dependencies = [
+ "log",
+ "serde",
 ]
 
 [[package]]
@@ -9276,7 +9493,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "similar",
- "sqlparser",
+ "sqlparser 0.37.0",
  "sqlx",
  "sqlx-core",
  "sqlx-macros",
